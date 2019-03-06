@@ -1,4 +1,7 @@
 <?php
 
-namespace Botnyx/sfe-shared-core;
+namespace Botnyx\Sfe\Shared\Core;
 
+class Parser {
+
+}
