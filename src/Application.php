@@ -1,6 +1,6 @@
 <?php
 
-namespace Botnyx\Sfe\Shared\Core;
+namespace Botnyx\Sfe\Shared;
 
 class Application {
 	
