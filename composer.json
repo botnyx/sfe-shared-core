@@ -1,7 +1,7 @@
 {
     "name": "botnyx/sfe-shared-core",
     "description": "sfe shared core components .",
-    "keywords": ["template", "composer", "package"],
+    "keywords": ["sfe", "composer", "library"],
     "license": "proprietary",
     "authors": [
         {
