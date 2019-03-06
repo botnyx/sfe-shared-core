@@ -26,7 +26,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Botnyx\\Sfe-shared-core\\": "src/"
+            "Botnyx\\Sfe\\Shared\\": "src/"
         }
     }
 }
