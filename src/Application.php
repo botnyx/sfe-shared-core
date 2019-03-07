@@ -34,12 +34,7 @@ class Application {
 		return $this->app;		
 	}
 	
-	/* Cookie helper func. */
-	public function getCookieValue(\Slim\Http\Request $request, $cookieName)
-	{
-		$cookies = $request->getCookieParams();
-		return isset($cookies[$cookieName]) ? $cookies[$cookieName] : null;
-	}
+	
 
 	/* dev helper to show errors. */
 	public function show_errors(){
