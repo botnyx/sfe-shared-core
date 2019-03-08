@@ -51,7 +51,7 @@ class Formatter {
 		
 		
 		
-		
+		//Botnyx\Sfe\Shared\ApiResponse\Formatter::statusCodes()[$statusCode]['status'];
 		
 		$res["code"]=$statusCode;
 		$res["status"]=$this->statusCodes()[$statusCode]['status'];
