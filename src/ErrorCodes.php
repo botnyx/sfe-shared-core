@@ -6,9 +6,9 @@ class ErrorCodes{
 	/*
 		Sfe error codes.
 		
-		
+		$response,$errorcode,$string=false,$debug=false
 		Slim reponse usage:
-		return \Botnyx\Sfe\Shared\ExceptionResponse::get($response,2201);
+		return \Botnyx\Sfe\Shared\ExceptionResponse::get($response,$code=2201,$additionalDebugtxt=string,$debug=bool);
 		
 		raise Exception (only the code):
 		new Botnyx\Sfe\Shared\Exception($msg,$code)
@@ -24,7 +24,7 @@ class ErrorCodes{
 		$array = array();
 		/* Merge the arrays into 1 big one. */
 		$array = array_merge($array,$this->configErrors());
-		
+		$array = array_merge($array,$this->filesystemErrors());
 		/* return the error */
 		return $array["E".$code];
 	}
@@ -52,9 +52,10 @@ class ErrorCodes{
 			filesystem errors between 2000-2999
 		*/
 		return array(
-			"E2200"=>"no templatepath found for client",
-			"E2201"=>"Origin template not found for client",
-			"E2202"=>"FATAL vendor/botnyx/backend-core/templates not found!"
+			"E2200"=>"folder _Clients/  not found in templates.",
+			"E2201"=>"client template not found _Clients/ lients/ .",
+			"E2202"=>"Origin template not found for client",
+			"E2203"=>""
 			
 		
 		);

@@ -23,6 +23,7 @@ class Formatter {
 	function response($data,$option1=false,$option2=false){
 		$statusCode = 200;
 		if( is_int($option1) ){
+			/* option1 is a integer, so option1 is the statusCode */
 			$statusCode = $option1;
 			$options = $option2;
 			
@@ -40,6 +41,19 @@ class Formatter {
 		
 		/* the response array */
 		$res = array();
+		
+		
+		if($statusCode>=1000){
+			$res["code"]=$statusCode;
+			$res["status"]="error";//$this->statusCodes()[$statusCode]['status'];
+			$res["statusmsg"]=$data;//$this->statusCodes()[$statusCode]['statusmsg'];
+
+			$res["data"] = $option2;//$data;
+
+			return $res;
+			
+		}
+		
 		/*
 			check the options, to add additional metadata 
 		*/
@@ -48,16 +62,7 @@ class Formatter {
 			$res['metadata']=$metadata->get();
 		}
 		
-		if($statusCode>=1000){
-			$res["code"]=$statusCode;
-			$res["status"]="error";//$this->statusCodes()[$statusCode]['status'];
-			$res["statusmsg"]=$data;//$this->statusCodes()[$statusCode]['statusmsg'];
-
-			$res["data"] = false;//$data;
-
-			return $res;
-			
-		}
+		
 		
 		
 		//Botnyx\Sfe\Shared\ApiResponse\Formatter::statusCodes()[$statusCode]['status'];

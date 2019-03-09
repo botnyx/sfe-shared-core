@@ -182,6 +182,7 @@ class Application {
 		
 		$this->paths = $settings['paths'];
 		$this->slim  = $settings['slim'];
+		$section_settings['debug'] = $settings['slim']['debug'];
 		$this->twig  = $settings['twig'];
 		
 		$this->settings = $section_settings;
