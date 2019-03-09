@@ -48,7 +48,16 @@ class Formatter {
 			$res['metadata']=$metadata->get();
 		}
 		
-		
+		if($statusCode>=1000){
+			$res["code"]=$statusCode;
+			$res["status"]="error";//$this->statusCodes()[$statusCode]['status'];
+			$res["statusmsg"]=$data;//$this->statusCodes()[$statusCode]['statusmsg'];
+
+			$res["data"] = false;//$data;
+
+			return $res;
+			
+		}
 		
 		
 		//Botnyx\Sfe\Shared\ApiResponse\Formatter::statusCodes()[$statusCode]['status'];
