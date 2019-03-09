@@ -10,6 +10,10 @@ class ErrorCodes{
 		Slim reponse usage:
 		return \Botnyx\Sfe\Shared\ExceptionResponse::get($response,$code=2201,$additionalDebugtxt=string,$debug=bool);
 		
+		no debug msg:
+		return \Botnyx\Sfe\Shared\ExceptionResponse::get($response,$code=2201);
+		
+		
 		raise Exception (only the code):
 		new Botnyx\Sfe\Shared\Exception($msg,$code)
 	
@@ -25,6 +29,7 @@ class ErrorCodes{
 		/* Merge the arrays into 1 big one. */
 		$array = array_merge($array,$this->configErrors());
 		$array = array_merge($array,$this->filesystemErrors());
+		$array = array_merge($array,$this->twigErrors());
 		/* return the error */
 		return $array["E".$code];
 	}
@@ -42,7 +47,7 @@ class ErrorCodes{
 		Authsrv   300-399
 	
 	*/
-	function filesystemErrors(){
+	function twigErrors(){
 		/*
 		Application 1-99
 		Frontend  100-199
@@ -52,11 +57,12 @@ class ErrorCodes{
 			filesystem errors between 2000-2999
 		*/
 		return array(
-			"E2200"=>"folder _Clients/  not found in templates.",
-			"E2201"=>"client template not found _Clients/ lients/ .",
-			"E2202"=>"Origin template not found for client",
-			"E2203"=>""
-			
+			"E3200"=>"Twig_Error_Loader",
+			"E3201"=>"Twig_Error_Syntax",
+			"E3202"=>"Twig_Error_Runtime",
+			"E3203"=>"Twig_Error_Security",
+			"E3204"=>"Twig_Error_Generic",
+			"E3205"=>"Twig Uncaught Exception"
 		
 		);
 	}
@@ -114,8 +120,23 @@ class ErrorCodes{
 	
 	
 	
-	function generic (){
+	function filesystemErrors(){
+		/*
+		Application 1-99
+		Frontend  100-199
+		Backend   200-299
+		Authsrv   300-399
 		
+			filesystem errors between 2000-2999
+		*/
+		return array(
+			"E2200"=>"folder _Clients/  not found in templates.",
+			"E2201"=>"client template not found _Clients/ lients/ .",
+			"E2202"=>"Origin template not found for client",
+			"E2203"=>""
+			
+		
+		);
 	}
 	
 	
