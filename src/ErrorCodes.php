@@ -131,9 +131,9 @@ class ErrorCodes{
 		*/
 		return array(
 			"E2200"=>"folder _Clients/  not found in templates.",
-			"E2201"=>"client template not found _Clients/ lients/ .",
+			"E2201"=>"client template not found _Clients/[client_id]/",
 			"E2202"=>"Origin template not found for client",
-			"E2203"=>""
+			"E2203"=>"test123"
 			
 		
 		);
