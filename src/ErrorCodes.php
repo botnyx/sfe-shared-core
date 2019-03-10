@@ -62,8 +62,8 @@ class ErrorCodes{
 			"E3202"=>"Twig_Error_Runtime",
 			"E3203"=>"Twig_Error_Security",
 			"E3204"=>"Twig_Error_Generic",
-			"E3205"=>"Twig Uncaught Exception"
-		
+			"E3205"=>"Twig Uncaught Exception",
+			"E3206"=>"Css/JS Assets Not found Exception"
 		);
 	}
 	
