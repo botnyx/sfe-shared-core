@@ -133,7 +133,7 @@ class ErrorCodes{
 			"E2200"=>"folder _Clients/  not found in templates.",
 			"E2201"=>"client template not found _Clients/[client_id]/",
 			"E2202"=>"Origin template not found for client",
-			"E2203"=>"test123"
+			"E2203"=>"requested path is non-existent."
 			
 		
 		);
