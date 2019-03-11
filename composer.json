@@ -20,7 +20,8 @@
         "psr/cache": "^1.0",
         "guzzlehttp/guzzle": "^6.2",
         "kevinrob/guzzle-cache-middleware": "^3.2",
-        "monolog/monolog": "^1.24"
+        "monolog/monolog": "^1.24",
+        "enqueue/dsn": "0.9.x"
     },
     "require-dev": {
 		    "phpunit/phpunit": "6.*"
