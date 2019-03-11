@@ -11,8 +11,6 @@ class Application {
 		try{
 			$this->parseSettings($_settings);
 		}catch(\Exception $e){
-			
-			//$_SERVER['HTTP_HOST'];
 			echo $e->getMessage();
 			die(" - ");
 		}
