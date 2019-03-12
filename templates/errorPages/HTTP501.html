@@ -8,6 +8,8 @@
 </head>
 <body>
     <div class="cover"><h1>Not Implemented <small>Error 501</small></h1><p class="lead">The Webserver cannot recognize the request method.</p></div>
-    
+    {% if debug==1 %}
+    <footer>ErrNo: {{ error.code }} , {{ error.message }} {{ error.file }}:{{ error.line }}</footer>
+	{% endif %}
 </body>
 </html>
