@@ -32,3 +32,13 @@ $_include = _SETTINGS['paths']['root']."/vendor/botnyx/sfe-frontend-core/src/inc
 if(array_key_exists('sfeFrontend',_SETTINGS) && file_exists($_include)){
 	require_once($_include);
 }
+
+
+
+
+
+
+
+
+
+
