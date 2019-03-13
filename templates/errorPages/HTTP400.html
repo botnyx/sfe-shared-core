@@ -8,6 +8,8 @@
 </head>
 <body>
     <div class="cover"><h1>Bad Request <small>Error 400</small></h1><p class="lead">The server cannot process the request due to something that is perceived to be a client error.</p></div>
-    
+    {% if debug==1 %}
+    <footer>ErrNo: {{ error.code }} , {{ error.message }} {{ error.file }}:{{ error.line }}</footer>
+	{% endif %}
 </body>
 </html>

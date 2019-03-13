@@ -37,7 +37,7 @@ class AssetProxy{
 		//$this->frontEndConfig =  $container->get('frontEndConfig');
 
 		$cacheDirectory = sys_get_temp_dir();
-
+		$this->debug = true;
 
 		// Create default HandlerStack
 		$this->_stack = \GuzzleHttp\HandlerStack::create();
@@ -65,7 +65,8 @@ class AssetProxy{
 			'cache' => false
 		]);
 		return $view->render($response, 'HTTP404.html', [
-			'errors' => array("code"=>404,"message"=>"AssetsProxy")
+			'debug'=>$this->debug,
+			'error' => array("code"=>404,"message"=>"Backend AssetsProxy reports 'File not Found.'")
 		])->withStatus(404);
 		//return $response->withStatus(404)->withHeader('Content-Type', 'text/html')->write('CUSTOM Page not found');
 	}
