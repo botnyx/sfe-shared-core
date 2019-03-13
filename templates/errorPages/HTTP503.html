@@ -8,8 +8,8 @@
 </head>
 <body>
     <div class="cover"><h1>Webservice currently unavailable <small>Error {{ error.code }}</small></h1><p class="lead">We&#39;ve got some trouble with our backend upstream cluster.<br />Our service team has been dispatched to bring it back online.</p></div>
-    
+
     <footer>ErrNo: {{ error.code }} {% if debug==1 %}, {{ error.message }} {{ error.file }}:{{ error.line }}{% endif %}</footer>
-	
+
 </body>
 </html>

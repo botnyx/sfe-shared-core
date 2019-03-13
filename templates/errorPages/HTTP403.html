@@ -8,6 +8,8 @@
 </head>
 <body>
     <div class="cover"><h1>Access Denied <small>Error 403</small></h1><p class="lead">The requested resource requires an authentication.</p></div>
-    
+    {% if debug==1 %}
+    <footer>ErrNo: {{ error.code }} , {{ error.message }} {{ error.file }}:{{ error.line }}</footer>
+  {% endif %}
 </body>
 </html>
