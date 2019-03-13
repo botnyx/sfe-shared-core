@@ -38,7 +38,9 @@ class AssetProxy{
 
 		$cacheDirectory = sys_get_temp_dir();
 		$this->debug = true;
-
+		
+		$this->cacher = $container->get('cache');
+		
 		// Create default HandlerStack
 		$this->_stack = \GuzzleHttp\HandlerStack::create();
 		$this->_stack->push(
@@ -60,6 +62,33 @@ class AssetProxy{
 		
 	}
 	
+	function responseWithHeaders($response,$guzzleresponse){
+		
+				  
+		print_r( $res->getHeaders() );
+		
+		die();
+		#print_r($res->getHeader("Content-Type"));  // [0] => text/javascript; charset=utf-8
+		#print_r($res->getHeader("Last-Modified")); // [0] => Wed, 13 Feb 2019 16:41:46 GMT
+		#print_r($res->getHeader("cache-control")); // [0] => public, max-age=31536000
+		
+		return array( "html"=>$res->getBody()->getContents(), 
+		"Last-Modified"=>strtotime( $res->getHeader("Last-Modified")[0] ),
+		"cache-control"=>$res->getHeader("cache-control")[0],
+		"Content-Type"=>$res->getHeader("Content-Type")[0] 	 ) ;
+		
+		
+		
+		$res = $response->write( $returnedData['html'] )->withHeader('Content-Type',$returnedData['Content-Type']);
+		//$resWithExpires = $this->cache->withExpires($res, time() + 3600);
+		$responseWithCacheHeader = $this->cacher->withExpires($res, time() + 3600);
+		$responseWithCacheHeader = $this->cacher->withLastModified($responseWithCacheHeader, $returnedData['Last-Modified'] );
+		return $responseWithCacheHeader;
+		
+	}
+	
+	
+	
 	function e404($response){
 		$view = new \Slim\Views\Twig(_SETTINGS['paths']['root'].'/vendor/botnyx/sfe-shared-core/templates/errorPages', [
 			'cache' => false
@@ -74,6 +103,18 @@ class AssetProxy{
 	
 	function get($uri){
 		
+		try {
+			
+			$res = $this->client->request('GET',$uri);	
+			
+		}catch(\Exception $e){
+			throw new \Exception($e->getMessage(),$e->getCode());
+			
+		}
+		
+		return $this->responseWithHeaders($response,$res);
+		
+		
 		
 		try {
 			
@@ -84,7 +125,7 @@ class AssetProxy{
 			
 		}
 		#print_r($res->getHeaders());
-		
+		//die();
 		#print_r($res->getHeader("Content-Type"));  // [0] => text/javascript; charset=utf-8
 		#print_r($res->getHeader("Last-Modified")); // [0] => Wed, 13 Feb 2019 16:41:46 GMT
 		#print_r($res->getHeader("cache-control")); // [0] => public, max-age=31536000
