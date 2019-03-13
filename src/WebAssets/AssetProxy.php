@@ -64,8 +64,54 @@ class AssetProxy{
 	
 	function responseWithHeaders($response,$guzzleresponse){
 		
-				  
-		print_r( $res->getHeaders() );
+		$headers = $guzzleresponse->getHeaders();
+		
+		
+		if(array_key_exists('Cache-Control',$headers) ){
+			// https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching
+			// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
+			
+			//print_r($headers);
+			
+			foreach($headers['Cache-Control'] as $headerval){
+				$response = $response->withHeader('Cache-Control',$headerval);
+			}
+			//Cache-Control: public
+			//Cache-Control: max-age=31536000
+				
+		}
+		
+		if(array_key_exists('Pragma',$headers) ){
+			// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Pragma
+			// Use Pragma only for backwards compatibility with HTTP/1.0 clients.
+			foreach($headers['Pragma'] as $headerval){
+				$response = $response->withHeader('Pragma',$headerval);
+			}
+			
+		}
+		
+		if(array_key_exists('Last-Modified',$headers) ){
+			//https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified
+			foreach($headers['Last-Modified']as $headerval){
+				$response = $response->withHeader('Last-Modified',$headerval);
+			}
+		}
+		
+		if(array_key_exists('Expires',$headers) ){
+			foreach($headers['Expires']as $headerval){
+				$response = $response->withHeader('Expires',$headerval);
+			}
+		}
+		
+		if(array_key_exists('Content-Type',$headers) ){
+			foreach($headers['Content-Type']as $headerval){
+				$response = $response->withHeader('Content-Type',$headerval);
+			}
+		}
+		
+		
+		return $response;
+		
 		
 		die();
 		#print_r($res->getHeader("Content-Type"));  // [0] => text/javascript; charset=utf-8
@@ -101,8 +147,8 @@ class AssetProxy{
 	}
 	
 	
-	function get($uri){
-		
+	function get($response,$uri){
+		//print_r($uri);
 		try {
 			
 			$res = $this->client->request('GET',$uri);	
@@ -112,9 +158,14 @@ class AssetProxy{
 			
 		}
 		
-		return $this->responseWithHeaders($response,$res);
+		#print_r($res->getBody()->getContents());
+		#die("xxcccc");
 		
 		
+		//die("xx");
+		return $this->responseWithHeaders($response->write($res->getBody()->getContents()),$res);
+		
+		/*
 		
 		try {
 			
@@ -141,7 +192,7 @@ class AssetProxy{
 		//"https://backend.servenow.nl/_/assets/css/".$args['path'];
 		//"https://backend.servenow.nl/_/assets/js/".$args['path'];
 		//return "https://backend.servenow.nl/_/assets/fonts/".$args['path'];
-		
+		*/
 	}
 	
 }
