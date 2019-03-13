@@ -12,11 +12,18 @@ class ExceptionResponse{
 		if($debug==false){
 			$string=false;
 		}
+		
+		
 		try{
 			new \Botnyx\Sfe\Shared\Exception( $string, $errorcode );
 			
 		}catch(\Exception $e){
 			$outputFormat = new \Botnyx\Sfe\Shared\ApiResponse\Formatter();
+			
+			//$outputFormat->response( "Error" ,$e->getCode() ,$debug);
+			
+			//die("??????");
+			
 			//$outputFormat->response($e->getMessage(),$e->getCode());
 			return $response->withJson($outputFormat->response( $e->getMessage() ,$e->getCode() ,$string ) )->withStatus(500);
 			

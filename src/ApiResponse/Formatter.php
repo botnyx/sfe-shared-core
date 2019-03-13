@@ -58,7 +58,7 @@ class Formatter {
 			check the options, to add additional metadata 
 		*/
 		if($options!=false){
-			$metadata = new metadata($options);	
+			$metadata = new Metadata($options);	
 			$res['metadata']=$metadata->get();
 		}
 		
