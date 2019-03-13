@@ -76,7 +76,7 @@ class AssetProxy{
 		
 		try {
 			
-			$res = $this->client->request('GET',_SETTINGS['sfeFrontend']['sfeBackend'] );	
+			$res = $this->client->request('GET',$uri);	
 			
 		}catch(\Exception $e){
 			throw new \Exception($e->getMessage(),$e->getCode());
