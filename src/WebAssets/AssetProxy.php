@@ -111,26 +111,6 @@ class AssetProxy{
 		
 		
 		return $response;
-		
-		
-		die();
-		#print_r($res->getHeader("Content-Type"));  // [0] => text/javascript; charset=utf-8
-		#print_r($res->getHeader("Last-Modified")); // [0] => Wed, 13 Feb 2019 16:41:46 GMT
-		#print_r($res->getHeader("cache-control")); // [0] => public, max-age=31536000
-		
-		return array( "html"=>$res->getBody()->getContents(), 
-		"Last-Modified"=>strtotime( $res->getHeader("Last-Modified")[0] ),
-		"cache-control"=>$res->getHeader("cache-control")[0],
-		"Content-Type"=>$res->getHeader("Content-Type")[0] 	 ) ;
-		
-		
-		
-		$res = $response->write( $returnedData['html'] )->withHeader('Content-Type',$returnedData['Content-Type']);
-		//$resWithExpires = $this->cache->withExpires($res, time() + 3600);
-		$responseWithCacheHeader = $this->cacher->withExpires($res, time() + 3600);
-		$responseWithCacheHeader = $this->cacher->withLastModified($responseWithCacheHeader, $returnedData['Last-Modified'] );
-		return $responseWithCacheHeader;
-		
 	}
 	
 	
@@ -148,9 +128,8 @@ class AssetProxy{
 	
 	
 	function get($response,$uri){
-		//print_r($uri);
-		try {
-			
+				
+		try {	
 			$res = $this->client->request('GET',$uri);	
 			
 		}catch(\Exception $e){
@@ -158,41 +137,9 @@ class AssetProxy{
 			
 		}
 		
-		#print_r($res->getBody()->getContents());
-		#die("xxcccc");
 		
-		
-		//die("xx");
 		return $this->responseWithHeaders($response->write($res->getBody()->getContents()),$res);
 		
-		/*
-		
-		try {
-			
-			$res = $this->client->request('GET',$uri);	
-			
-		}catch(\Exception $e){
-			throw new \Exception($e->getMessage(),$e->getCode());
-			
-		}
-		#print_r($res->getHeaders());
-		//die();
-		#print_r($res->getHeader("Content-Type"));  // [0] => text/javascript; charset=utf-8
-		#print_r($res->getHeader("Last-Modified")); // [0] => Wed, 13 Feb 2019 16:41:46 GMT
-		#print_r($res->getHeader("cache-control")); // [0] => public, max-age=31536000
-		
-		return array( "html"=>$res->getBody()->getContents(), 
-		"Last-Modified"=>strtotime( $res->getHeader("Last-Modified")[0] ),
-		"cache-control"=>$res->getHeader("cache-control")[0],
-		"Content-Type"=>$res->getHeader("Content-Type")[0] 	 ) ;
-		
-		//print_r( $res->getBody()->getContents() );
-		//die();
-		
-		//"https://backend.servenow.nl/_/assets/css/".$args['path'];
-		//"https://backend.servenow.nl/_/assets/js/".$args['path'];
-		//return "https://backend.servenow.nl/_/assets/fonts/".$args['path'];
-		*/
 	}
 	
 }
