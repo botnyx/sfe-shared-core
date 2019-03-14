@@ -38,11 +38,7 @@ class Metadata{
 	function __construct($options){
 		
 		if(array_key_exists('pagination',$options) ){
-			
-			
-			
 			$this->pagination( $options['pagination']['page_number'], $options['pagination']['page_size'], $options['pagination']['total_record_count']);
-			
 		}
 		
 	}
