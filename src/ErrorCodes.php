@@ -53,7 +53,7 @@ class ErrorCodes{
 		Frontend  100-199
 		Backend   200-299
 		Authsrv   300-399
-		
+		 
 			filesystem errors between 2000-2999
 		*/
 		return array(
