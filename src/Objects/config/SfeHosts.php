@@ -21,7 +21,7 @@ class SfeHosts {
 	
 	function __set($name, $value) {
 		
-		if(strpos($value,'http')>=0){
+		if(strpos($value,'http')==0){
 			new \Exception("FAIL: hostname (fqdn) cannot contain protocol 'http' or 'https'");
 		}
         switch (strtoupper($name)) {

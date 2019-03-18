@@ -28,21 +28,44 @@ class Application {
 		
 		
 		/* Dependencies */
+		switch ($this->configuration->type) {
+			case "frontend":
+				$applicationCore = new \Botnyx\Sfe\Frontend\Core\SlimLogic();
+				break;
+			case "backend":
+				$applicationCore = new \Botnyx\Sfe\Backend\Core\SlimLogic();
+				break;
+			case "auth":
+				$applicationCore = new \Botnyx\Sfe\Auth\Core\SlimLogic();
+				break;
+			case "cdn":
+				$applicationCore = new \Botnyx\Sfe\Cdn\Core\SlimLogic();
+				break;
+			default:
+				throw new \Exception("invalid role.");
+				break;
+		}
 		
+		#print_r($this->configuration->type);
+		#die();
 		
 		/* Start the slim application */
 		$app = $this->startSlim();
 		
 		
-		
 		/* get the container */
 		$container = $app->getContainer();
 		
+		$container = $applicationCore->getContainer($container);
+		
+		
+		
 		/* Middleware */
+		$app = $applicationCore->getMiddleware($app,$container);
 		
-		/* Routes */
-		
-		
+			
+		/* Routes */		
+		$app = $applicationCore->getRoutes($app,$container);
 		
 		
 		#print_r($this);
@@ -229,12 +252,11 @@ class Application {
 	
 	
 	/* Create the Slim application */
-	private function startSlim(){
-		
+	public function startSlim(){
 		$app = new \Slim\App([
 			'settings' => [
 				'paths'=> (array) $this->configuration->paths,
-				'sfe'=> $this->settings,
+				'sfe'=> $this->configuration->role,
 				'displayErrorDetails' => $this->configuration->slim->debug, // set to false in production
 				'routerCacheFile' => $this->configuration->slim->routercachefile,
 				// Monolog settings
@@ -278,7 +300,7 @@ class Application {
 	
 	
 	
-	private function OBSOLETEslimDefaultSettings(){
+	private function slimDefaultSettings(){
 		$settings = array();
 		$setting['httpVersion'] = "1.1";
 		$setting['responseChunkSize'] = 4096;
