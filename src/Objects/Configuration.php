@@ -151,7 +151,12 @@ class Configuration {
 		if( !array_key_exists('routercachefile',$settings['slim']) ){
 			throw new \Exception("Fatal Error in Configuration.ini : Missing `routercachefile` in `slim` section.");
 		}
-		$slim->routercachefile=$settings['slim']['routercachefile'];
+		if($settings['slim']['routercachefile']==""){
+			$slim->routercachefile=false;
+		}else{
+			$slim->routercachefile=$settings['slim']['routercachefile'];
+		}
+		
 		return $slim;
 	}
 	
