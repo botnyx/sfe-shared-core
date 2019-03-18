@@ -15,16 +15,11 @@ use \Twig\Extension;
 
 class Twig {
 	
-	var $debug 			= true;
-	var $cache			= false;
-	
-	var $extensions		= array();
-	
-	
+
 	private function Exception( $type,$value ) {
 		throw new \Exception("FAIL: ".ucfirst($type)." wanted " . gettype($value) . " received");
 	}
-	
+
 	private function file_exists($file){
 		if(file_exists($file)){
 			throw new \Exception("FAIL: file doesnt exist (".$file.")");
@@ -32,7 +27,7 @@ class Twig {
 			return true;
 		}
 	}
-	
+
 	private function isCache($file){
 		if(is_bool($file) && $file==false ){
 			return true;
@@ -40,9 +35,9 @@ class Twig {
 			return $this->file_exists($file);
 		}
 	}
-	
+
 	private function logLevel($loglevel){
-		
+
 		switch(strtoupper($loglevel)){
 			case "DEBUG":
 				return \Monolog\Logger::DEBUG;
@@ -62,10 +57,10 @@ class Twig {
 				return \Monolog\Logger::EMERGENCY;
 			default:
 				throw new \Exception("FAIL: Unknown SLIM loglevel");
-				
+
 		}
 	}
-	
+
 	private function isExtension($value){
 		/*
 			Text: Provides useful filters for text manipulation;
@@ -90,25 +85,25 @@ class Twig {
 		$this->extensions=$currentExtensions;
 		return true;
 	}
-	
+
 	function __set($name, $value) {
         switch ($name) {
             case "debug":
                 $valid = is_bool($value) ;
-				$error = array( 'Boolean',$value ); 
+				$error = array( 'Boolean',$value );
                 break;
             case "extension":
                 $valid = $this->isExtension($value);
-				$error = array( 'String',$value ); 
+				$error = array( 'String',$value );
                 break;
             case "cache":
                 $valid = $this->isCache($file);
-				$error = array( 'Bool',$value ); 
+				$error = array( 'Bool',$value );
                 break;
 
 			default:
                 $valid = false; // allow all other attempts to set values (or make this false to deny them)
-				$error = array( 'Unknown variable!' ); 
+				$error = array( 'Unknown variable!' );
         }
 
         if ($valid) {
@@ -124,13 +119,13 @@ class Twig {
 			}else{
 				$this->Exception( $type,$value );
 			}
-			
+
             // just for demonstration
             //echo "FAIL: Cannot set \$this->$name = ";
             //var_dump($value);
-			
+
         }
     }
-	
-	
+
+
 }

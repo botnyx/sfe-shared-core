@@ -6,56 +6,54 @@ namespace Botnyx\Sfe\Shared\Objects\config;
 /*
 
 
-	
-	
-	
+
+
+
 */
 
 
 class SfeHosts {
-	
-	var $frontend= "";
-	var $backend = "";
-	var $cdn	 = "";
-	var $auth	 = "";
-	
+
+
 	function __set($name, $value) {
-		echo "<hr>";
-		var_dump($value);
-		echo "<hr>";
-		if(strpos($value,'http')==0){
-			new \Exception("FAIL: hostname (fqdn) cannot contain protocol 'http' or 'https'");
+
+		#var_dump($name);
+		#var_dump($value);
+		#var_dump(strpos($value,'http'));
+
+		if(strpos($value,'http')!==false){
+			throw new \Exception("FAIL: hostname (fqdn) cannot contain protocol 'http' or 'https'");
 		}
         switch (strtoupper($name)) {
-				
-            case "FRONTEND":
+
+            case "SFEFRONTEND":
                 $valid = is_string($value) ;
-				$error = array( 'String',$value ); 
+				$error = array( 'String',$value );
                 break;
-				
-            case "BACKEND":
+
+            case "SFEBACKEND":
                 $valid = is_string($value) ;
-				$error = array( 'String',$value ); 
+				$error = array( 'String',$value );
                 break;
-				
-            case "CDN":
+
+            case "SFECDN":
                 $valid = is_string($value) ;
-				$error = array( 'String',$value ); 
+				$error = array( 'String',$value );
                 break;
-				
-            case "AUTH":
+
+            case "SFEAUTH":
                 $valid = is_string($value) ;
-				$error = array( 'String',$value ); 
+				$error = array( 'String',$value );
                 break;
-            
+
 
 			default:
                 $valid = false; // allow all other attempts to set values (or make this false to deny them)
-				$error = array( 'Unknown variable!' ); 
+				$error = array( 'Unknown variable!' );
         }
 
         if ($valid) {
-            $this->{strtolower($name)} = $value;
+            $this->{str_replace("sfe","",strtolower($name))} = $value;
 
             // just for demonstration
             //echo "pass: Set \$this->$name = ";
@@ -67,14 +65,25 @@ class SfeHosts {
 			}else{
 				$this->Exception( $type,$value );
 			}
-			
+
             // just for demonstration
             //echo "FAIL: Cannot set \$this->$name = ";
             //var_dump($value);
-			
+
         }
     }
-	
-	
-	
+
+	public function getUri($what=false){
+		if($what==false){
+			return array(
+				"frontend"=>"https://".$this->frontend ,
+				"backend"=>"https://".$this->backend ,
+				"cdn"=>"https://".$this->cdn ,
+				"auth"=>"https://".$this->auth
+			);
+		}else{
+			return "https://".$this->{$what};
+		}
+	}
+
 }

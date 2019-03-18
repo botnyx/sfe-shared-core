@@ -12,10 +12,7 @@ namespace Botnyx\Sfe\Shared\Objects\config;
 
 class ClientCredentials {
 	
-	var $clientid;
-	var $clientsecret;
-	
-	
+
 	private function isClientidorSecret($value){
 		if(!is_string($value)){
 			throw new \Exception("FAIL: Cannot set clientId variable. ".gettype($value));
@@ -28,21 +25,21 @@ class ClientCredentials {
 
 	function __set($name, $value) {
         switch ($name) {
-				
+
             case "clientid":
                 $valid = $this->isClientidorSecret($value) ;
-				$error = array( 'String',$value ); 
+				$error = array( 'String',$value );
                 break;
-				
+
             case "clientsecret":
                 $valid = $this->isClientidorSecret($value);
-				$error = array( 'String',$value ); 
+				$error = array( 'String',$value );
                 break;
-            
+
 
 			default:
                 $valid = false; // allow all other attempts to set values (or make this false to deny them)
-				$error = array( 'Unknown variable!' ); 
+				$error = array( 'Unknown variable!' );
         }
 
         if ($valid) {
@@ -58,13 +55,13 @@ class ClientCredentials {
 			}else{
 				$this->Exception( $type,$value );
 			}
-			
+
             // just for demonstration
             //echo "FAIL: Cannot set \$this->$name = ";
             //var_dump($value);
-			
+
         }
     }
-	
-	
+
+
 }

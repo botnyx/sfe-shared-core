@@ -3,30 +3,33 @@
 namespace Botnyx\Sfe\Shared;
 
 class Application {
-	
+
 	private $configuration;
-	
-	
+
+
 	function __construct($_settings){
-		
-		
+
+
 		try{
-			$this->configuration = new Objects\Configuration($_settings);
+			$this->configuration = new \Botnyx\Sfe\Shared\Objects\Configuration($_settings);
 			//$this->parseSettings($_settings);
 		}catch( \Exception $e){
 			echo "<h1>Main application error!</h1>";
 			echo $e->getMessage();
 			die(" - ");
 		}
-		
+		echo "<pre>";
+		print_r($this->configuration);
+		die("xx");
 	}
-	
-	
-	
+
+
+
 	public function init(){
-		
-		
-		
+
+
+
+
 		/* Dependencies */
 		switch ($this->configuration->type) {
 			case "frontend":
@@ -45,87 +48,87 @@ class Application {
 				throw new \Exception("invalid role.");
 				break;
 		}
-		
+
 		#print_r($this->configuration->type);
 		#die();
-		
+
 		/* Start the slim application */
 		$app = $this->startSlim();
-		
-		
+
+
 		/* get the container */
 		$container = $app->getContainer();
-		
+
 		$container = $applicationCore->getContainer($container);
-		
-		
-		
+
+
+
 		/* Middleware */
 		$app = $applicationCore->getMiddleware($app,$container);
-		
-			
-		/* Routes */		
+
+
+		/* Routes */
 		$app = $applicationCore->getRoutes($app,$container);
-		
-		
+
+
 		#print_r($this);
 		#die("x");
-		
+
 		return $app;
 	}
-	
-	
-	
+
+
+
 	private function OBSOLETEparseSettings($settings){
-		
+
 		//$this->config = new Botnyx\Sfe\Shared\Objects\Configuration($settings);
-		
-		
+
+
 		return;
 		#print_r($settings);
 		#die();
-		
+
 		/* Check if section exists */
 		if(!array_key_exists('paths',$settings)){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing paths.");	
+			throw new \Exception("Fatal Error in Configuration.ini : Missing paths.");
 		}
 		if(!array_key_exists('root',$settings['paths'])){
 			throw new \Exception("Fatal Error in Configuration.ini : Missing `root` path.");
-			
+
 		}
 		if( !file_exists($settings['paths']['root']) ){
 			throw new \Exception("Fatal Error in Configuration.ini : Folder `root`  not found.");
 		}
-		
+
 		if(!array_key_exists('templates',$settings['paths'])){
 			throw new \Exception("Fatal Error in Configuration.ini : Missing `templates` path.");
-			
+
 		}elseif( !file_exists($settings['paths']['templates']) ){
 			throw new \Exception($settings['paths']['templates']." Fatal Error in Configuration.ini : Folder `templates`  not found.");
 		}
-		
+
 		if(!array_key_exists('publichtml',$settings['paths'])){
 			throw new \Exception("Fatal Error in Configuration.ini : Missing `publichtml` path.");
-			
+
 		}elseif( !file_exists($settings['paths']['publichtml']) ){
 			throw new \Exception("Fatal Error in Configuration.ini : Folder `publichtml`  not found.");
 		}
-		
+
 		if(!array_key_exists('logs',$settings['paths'])){
 			throw new \Exception("Fatal Error in Configuration.ini : Missing `logs` path.");
-			
+
 		}elseif( !file_exists($settings['paths']['logs']) ){
 			throw new \Exception("Fatal Error in Configuration.ini : Folder `logs`  not found.");
 		}
-		
+
 		if(!array_key_exists('temp',$settings['paths'])){
 			throw new \Exception("Fatal Error in Configuration.ini : Missing `temp` path.");
-			
+
 		}elseif( !file_exists($settings['paths']['temp']) ){
 			throw new \Exception("Fatal Error in Configuration.ini : Folder `temp`  not found.");
 		}
-		
-		
+
+
 		/* Slim Framework related section */
 		if(!array_key_exists('slim',$settings)){
 			throw new \Exception("Fatal Error in Configuration.ini : Missing `slim` section.");
@@ -136,14 +139,14 @@ class Application {
 		if( !array_key_exists('loglevel',$settings['slim']) ){
 				throw new \Exception("Fatal Error in Configuration.ini : Missing `loglevel` in `slim` section.");
 		}
-		
+
 		if( !array_key_exists('routercachefile',$settings['slim']) ){
 			throw new \Exception("Fatal Error in Configuration.ini : Missing `routercachefile` in `slim` section.");
 		}
-		
+
 		/* Twig template related section */
 		if(!array_key_exists('twig',$settings)){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing `twig` section.");	
+			throw new \Exception("Fatal Error in Configuration.ini : Missing `twig` section.");
 		}
 		if( !array_key_exists('cache',$settings['twig']) ){
 			throw new \Exception("Fatal Error in Configuration.ini : Missing `cache` in `twig` section.");
@@ -151,11 +154,11 @@ class Application {
 		if( !array_key_exists('debug',$settings['twig']) ){
 			throw new \Exception("Fatal Error in Configuration.ini : Missing `debug` in `twig` section.");
 		}
-		
-		
-		
-		
-		
+
+
+
+
+
 		/* Check if section exists */
 		if(array_key_exists('sfeFrontend',$settings)){
 			if(!array_key_exists('clientId',$settings['sfeFrontend'])){
@@ -163,7 +166,7 @@ class Application {
 			}
 			$this->clientId = $settings['sfeFrontend']['clientId'];
 			$section_settings = $settings['sfeFrontend'];
-			
+
 			if(!array_key_exists('sfeCdn',$settings['sfeFrontend'])){
 				throw new \Exception("Fatal Error in Configuration.ini : Missing `sfeCdn` in the `sfeFrontend` section.");
 			}
@@ -173,17 +176,17 @@ class Application {
 			if(!array_key_exists('sfeAuth',$settings['sfeFrontend'])){
 				throw new \Exception("Fatal Error in Configuration.ini : Missing `sfeAuth` in the `sfeFrontend` section.");
 			}
-			
-			
+
+
 			if(array_key_exists('conn',$settings['sfeFrontend'])){
 				throw new \Exception("Fatal Error in Configuration.ini : Unexpected `conn` in the `sfeFrontend` section.");
 			}
-			
-			
-			
-			
+
+
+
+
 		}
-		
+
 		/* Check if section exists */
 		if(array_key_exists('sfeBackend',$settings)){
 			if(!array_key_exists('clientId',$settings['sfeBackend'])){
@@ -191,7 +194,7 @@ class Application {
 			}
 			$this->clientId = $settings['sfeBackend']['clientId'];
 			$section_settings = $settings['sfeBackend'];
-			
+
 			if(!array_key_exists('clientSecret',$settings['sfeBackend'])){
 				throw new \Exception("Fatal Error in Configuration.ini : Missing `clientSecret` in the `sfeBackend` section.");
 			}else{
@@ -203,7 +206,7 @@ class Application {
 			if(!array_key_exists('sfeCdn',$settings['sfeBackend'])){
 				throw new \Exception("Fatal Error in Configuration.ini : Missing `sfeCdn` in the `sfeBackend` section.");
 			}
-			
+
 			if(!array_key_exists('conn',$settings['sfeBackend'])){
 				throw new \Exception("Fatal Error in Configuration.ini : Missing `conn` in the `sfeFrontend` section.");
 			}else{
@@ -212,11 +215,11 @@ class Application {
 				$settings['sfeBackend']['conn']['dbpassword'] = new \Botnyx\Sfe\Shared\ProtectedValue($settings['sfeBackend']['conn']['dbpassword']);
 
 			}
-			
-			
+
+
 			//Botnyx\Sfe\Shared\ProtectedValue();
 		}
-		
+
 		/* Check if section exists */
 		if(array_key_exists('sfeAuth',$settings)){
 			if(!array_key_exists('clientId',$settings['sfeAuth'])){
@@ -224,33 +227,33 @@ class Application {
 			}
 			$this->clientId = $settings['sfeAuth']['clientId'];
 			$section_settings = $settings['sfeBackend'];
-			
+
 			if(!array_key_exists('clientSecret',$settings['sfeAuth'])){
 				throw new \Exception("Fatal Error in Configuration.ini : Missing `clientSecret` in the `sfeAuth` section.");
 			}
 		}
-		
+
 		if(array_key_exists('sfeCdn',$settings)){
-			
+
 		}
-		
+
 		if( $settings['slim']['routercachefile']=="1" ){
 			$settings['slim']['routercachefile']= $settings['paths']['temp']."/".$this->clientId."/RouterCache.php";
 		}else{
 			$settings['slim']['routercachefile']=false;
 		}
-		
+
 		//var_dump($settings);
-		
+
 		$this->paths = $settings['paths'];
 		$this->slim  = $settings['slim'];
 		$section_settings['debug'] = $settings['slim']['debug'];
 		$this->twig  = $settings['twig'];
-		
+
 		$this->settings = $section_settings;
 	}
-	
-	
+
+
 	/* Create the Slim application */
 	public function startSlim(){
 		$app = new \Slim\App([
@@ -261,17 +264,17 @@ class Application {
 				'routerCacheFile' => $this->configuration->slim->routercachefile,
 				// Monolog settings
 				'logger' => $this->slimLogger($this->configuration->role->clientid, $this->configuration->slim->loglevel ),
-				'addContentLengthHeader'=>false,  
-		/*		'addContentLengthHeader'=>false 
-					ALWAYS disable this, else  the error 
-					PHP Fatal error:  Uncaught TypeError: fread() expects parameter 2 to be integer, string given 
-					Zend\\Diactoros\\Stream->read('173') 
+				'addContentLengthHeader'=>false,
+		/*		'addContentLengthHeader'=>false
+					ALWAYS disable this, else  the error
+					PHP Fatal error:  Uncaught TypeError: fread() expects parameter 2 to be integer, string given
+					Zend\\Diactoros\\Stream->read('173')
 				*/
 			],
 		]);
-		return $app;		
+		return $app;
 	}
-	
+
 	private function logLevel($loglevel){
 		$levels= array(
 			"DEBUG"		=>\Monolog\Logger::DEBUG,
@@ -281,11 +284,11 @@ class Application {
 			"ERROR"		=>\Monolog\Logger::ERROR,
 			"CRITICAL"	=>\Monolog\Logger::CRITICAL,
 			"ALERT"		=>\Monolog\Logger::ALERT,
-			"EMERGENCY"	=>\Monolog\Logger::EMERGENCY		
+			"EMERGENCY"	=>\Monolog\Logger::EMERGENCY
 		);
 		return $levels[strtoupper($loglevel)];
 	}
-	
+
 	private function slimLogger($logname,$loglevel='debug'){
 		$logger = array();
 		$logger['name'] = $logname;
@@ -293,13 +296,13 @@ class Application {
 		$logger['level'] = $this->logLevel($loglevel);
 		return $logger;
 	}
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
 	private function slimDefaultSettings(){
 		$settings = array();
 		$setting['httpVersion'] = "1.1";
@@ -309,9 +312,9 @@ class Application {
 		$setting['displayErrorDetails'] = false;
 		$setting['addContentLengthHeader'] = false;
 		$setting['routerCacheFile'] = false;
-		return $setting;		
+		return $setting;
 	}
-	
+
 
 	/* dev helper to show errors. */
 	public function show_errors(){
