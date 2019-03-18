@@ -41,34 +41,11 @@ class Configuration {
 	
 	
 	private function frontendSettings($settings){
-		
-		if(!array_key_exists('clientId',$settings['sfeFrontend'])){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing `clientId` in the `sfeFrontend` section.");
-		}
-		
-		$this->clientId = $settings['sfeFrontend']['clientId'];
-		$section_settings = $settings['sfeFrontend'];
-
-		if(!array_key_exists('sfeCdn',$settings['sfeFrontend'])){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing `sfeCdn` in the `sfeFrontend` section.");
-		}
-		if(!array_key_exists('sfeBackend',$settings['sfeFrontend'])){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing `sfeBackend` in the `sfeFrontend` section.");
-		}
-		if(!array_key_exists('sfeAuth',$settings['sfeFrontend'])){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing `sfeAuth` in the `sfeFrontend` section.");
-		}
-
-
-		if(array_key_exists('conn',$settings['sfeFrontend'])){
-			throw new \Exception("Fatal Error in Configuration.ini : Unexpected `conn` in the `sfeFrontend` section.");
-		}
-
-			
+		return new \Botnyx\Sfe\Frontend\Core\Objects\config\Frontend($settings);	
 	}
 	
 	private function backendSettings($settings){
-					
+		error_log(">>>>>>>>>>>>>>>>>>>>>>");
 		return new \Botnyx\Sfe\Backend\Core\Objects\config\Backend($settings);
 	}
 	
@@ -87,6 +64,7 @@ class Configuration {
 			throw new \Exception("Fatal Error in Configuration.ini : Missing `clientSecret` in the `sfeAuth` section.");
 		}
 	}
+	
 	
 	private function pathSettings($settings){
 		/* Check if section exists */
@@ -214,7 +192,6 @@ class Configuration {
 		
 		
 		$this->type=false;
-		
 		
 		/* Check if section exists */
 		if(array_key_exists('sfeFrontend',$settings) && $this->type==false ){
