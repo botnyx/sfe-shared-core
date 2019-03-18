@@ -4,13 +4,17 @@ namespace Botnyx\Sfe\Shared;
 
 class Application {
 	
-	var $clientId;
+	private $configuration;
 	
 	
 	function __construct($_settings){
+		
+		
 		try{
-			$this->parseSettings($_settings);
-		}catch(\Exception $e){
+			$this->configuration = new Objects\Configuration($_settings);
+			//$this->parseSettings($_settings);
+		}catch( \Exception $e){
+			echo "<h1>Main application error!</h1>";
 			echo $e->getMessage();
 			die(" - ");
 		}
@@ -18,9 +22,44 @@ class Application {
 	}
 	
 	
-	function parseSettings($settings){
+	
+	public function init(){
+		echo "<pre>xxx";
+		print_r($this);
+		die("x");
 		
 		
+		/* Dependencies */
+		
+		
+		/* Start the slim application */
+		$app = $this->startSlim();
+		
+		
+		
+		/* get the container */
+		$container = $app->getContainer();
+		
+		/* Middleware */
+		
+		/* Routes */
+		
+		
+		
+		
+		
+		
+		return $app;
+	}
+	
+	
+	
+	private function OBSOLETEparseSettings($settings){
+		
+		//$this->config = new Botnyx\Sfe\Shared\Objects\Configuration($settings);
+		
+		
+		return;
 		#print_r($settings);
 		#die();
 		
@@ -191,16 +230,16 @@ class Application {
 	
 	
 	/* Create the Slim application */
-	public function start(){
+	public function startSlim(){
 		
-		$this->app = new \Slim\App([
+		$app = new \Slim\App([
 			'settings' => [
-				'paths'=> $this->paths,
+				'paths'=> (array) $this->configuration->paths,
 				'sfe'=> $this->settings,
-				'displayErrorDetails' => $this->slim['debug'], // set to false in production
-				'routerCacheFile' => $this->slim['routercachefile'],
+				'displayErrorDetails' => $this->configuration->slim->debug, // set to false in production
+				'routerCacheFile' => $this->configuration->slim->routercachefile,
 				// Monolog settings
-				'logger' => $this->slimLogger($this->clientId, $this->slim['loglevel'] ),
+				'logger' => $this->slimLogger($this->configuration->role->clientid, $this->configuration->slim->loglevel ),
 				'addContentLengthHeader'=>false,  
 		/*		'addContentLengthHeader'=>false 
 					ALWAYS disable this, else  the error 
@@ -209,7 +248,7 @@ class Application {
 				*/
 			],
 		]);
-		return $this->app;		
+		return $app;		
 	}
 	
 	private function logLevel($loglevel){
@@ -229,10 +268,16 @@ class Application {
 	private function slimLogger($logname,$loglevel='debug'){
 		$logger = array();
 		$logger['name'] = $logname;
-		$logger['path'] = isset($_ENV['docker']) ? 'php://stdout' : $this->settings['paths']['logs'].'/app-'.$this->clientId.'.log';
+		$logger['path'] = isset($_ENV['docker']) ? 'php://stdout' : $this->configuration->paths->logs.'/app-'.$this->configuration->role->clientid.'.log';
 		$logger['level'] = $this->logLevel($loglevel);
 		return $logger;
 	}
+	
+	
+	
+	
+	
+	
 	
 	private function slimDefaultSettings(){
 		$settings = array();
