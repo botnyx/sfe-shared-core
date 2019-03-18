@@ -13,11 +13,11 @@ use Monolog;
 
 
 class Slim {
-	
+
 
 
 	private function Exception( $type,$value ) {
-		throw new \Exception("FAIL: ".ucfirst($type)." wanted " . gettype($value) . " received");
+		throw new \Exception("FAIL: ".ucfirst($type)." wanted " . gettype($value) ." (".$value.") received");
 	}
 
 	private function file_exists($file){
