@@ -229,7 +229,7 @@ class Application {
 	
 	
 	/* Create the Slim application */
-	public function startSlim(){
+	private function startSlim(){
 		
 		$app = new \Slim\App([
 			'settings' => [
@@ -278,7 +278,7 @@ class Application {
 	
 	
 	
-	private function slimDefaultSettings(){
+	private function OBSOLETEslimDefaultSettings(){
 		$settings = array();
 		$setting['httpVersion'] = "1.1";
 		$setting['responseChunkSize'] = 4096;
