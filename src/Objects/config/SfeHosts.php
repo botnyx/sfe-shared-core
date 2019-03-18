@@ -20,7 +20,9 @@ class SfeHosts {
 	var $auth	 = "";
 	
 	function __set($name, $value) {
-		
+		echo "<hr>";
+		var_dump($value);
+		echo "<hr>";
 		if(strpos($value,'http')==0){
 			new \Exception("FAIL: hostname (fqdn) cannot contain protocol 'http' or 'https'");
 		}
