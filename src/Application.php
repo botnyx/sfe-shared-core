@@ -24,9 +24,7 @@ class Application {
 	
 	
 	public function init(){
-		echo "<pre>xxx";
-		print_r($this);
-		die("x");
+		
 		
 		
 		/* Dependencies */
@@ -47,7 +45,8 @@ class Application {
 		
 		
 		
-		
+		#print_r($this);
+		#die("x");
 		
 		return $app;
 	}
