@@ -31,7 +31,7 @@ class Application {
 		#die("xx");
 	}
 	
-	function __get($name, $value) {
+	function __get($name) {
 		
 		if($name=='configuration'){
 			return $this->configuration;
