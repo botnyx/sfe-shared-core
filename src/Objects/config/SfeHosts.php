@@ -26,22 +26,22 @@ class SfeHosts {
 		}
         switch (strtoupper($name)) {
 
-            case "SFEFRONTEND":
+            case "FRONTEND":
                 $valid = is_string($value) ;
 				$error = array( 'String',$value );
                 break;
 
-            case "SFEBACKEND":
+            case "BACKEND":
                 $valid = is_string($value) ;
 				$error = array( 'String',$value );
                 break;
 
-            case "SFECDN":
+            case "CDN":
                 $valid = is_string($value) ;
 				$error = array( 'String',$value );
                 break;
 
-            case "SFEAUTH":
+            case "AUTH":
                 $valid = is_string($value) ;
 				$error = array( 'String',$value );
                 break;
