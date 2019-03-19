@@ -62,7 +62,9 @@ class Twig {
 		);
 		return $allowedExtensions;
 	}
-
+	public function _isExtension($value){
+		//die($value);
+	}
 	public function addExtension($value){
 		//die();
 		$currentExtensions = $this->extensions;
@@ -118,7 +120,7 @@ class Twig {
 				$value = $this->debugValue($value);
 				$error = array(  );
                 break;
-            case "extension":
+            case "extensionx":
 				//var_dump($value);
 				$valid = $this->isExtension($value);
 				$value = $this->extensions;
