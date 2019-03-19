@@ -306,8 +306,8 @@ class Configuration {
             $this->{$name} = $value;
 
             // just for demonstration
-            echo "pass: Set \$this->$name = ";
-            var_dump($value);
+            #echo "pass: Set \$this->$name = ";
+            #var_dump($value);
         } else {
             // throw an error, raise an exception, or otherwise respond
 			if( count($error)==1 ){
@@ -318,7 +318,7 @@ class Configuration {
 
             // just for demonstration
             //echo "FAIL: Cannot set \$this->$name = ";
-            var_dump($value);
+            #var_dump($value);
 
         }
     }

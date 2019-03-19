@@ -16,7 +16,7 @@ class SfeHosts {
 
 
 	function __set($name, $value) {
-
+		#die("xxx..x");
 		#var_dump($name);
 		#var_dump($value);
 		#var_dump(strpos($value,'http'));
