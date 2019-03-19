@@ -24,11 +24,11 @@ class Application {
 		#var_dump(new \Twig_Extensions_Extension_I18n());
 
 		#print_r(new \Twig\Extension\DebugExtension());
-		echo "<pre>";
+		#echo "<pre>";
 
-		print_r($this->configuration);
+		#print_r($this->configuration);
 
-		die("xx");
+		#die("xx");
 	}
 
 
