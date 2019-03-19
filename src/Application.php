@@ -18,8 +18,16 @@ class Application {
 			echo $e->getMessage();
 			die(" - ");
 		}
+
+		#echo "<pre>";
+
+		#var_dump(new \Twig_Extensions_Extension_I18n());
+
+		#print_r(new \Twig\Extension\DebugExtension());
 		echo "<pre>";
-		var_dump($this->configuration);
+
+		print_r($this->configuration);
+
 		die("xx");
 	}
 
