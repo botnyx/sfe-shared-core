@@ -30,7 +30,18 @@ class Application {
 
 		#die("xx");
 	}
-
+	
+	function __get($name, $value) {
+		
+		if($name=='configuration'){
+			return $this->configuration;
+		}else{
+			throw new \Exception("Cant access '".$name."' in Application.");
+		}
+		
+		
+		
+	}
 
 
 	public function init(){
