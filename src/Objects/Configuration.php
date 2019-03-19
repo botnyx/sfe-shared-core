@@ -182,18 +182,17 @@ class Configuration {
 		$twig->debug = $settings['twig']['debug'];
 
 
-
+		//die();
 
 		/* twig.extensions */
 		if( array_key_exists('extension',$settings['twig']) ){
-			$twig->extension = $settings['twig']['extension'];
-			//throw new \Exception("Fatal Error in Configuration.ini : Missing `debug` in `twig` section.");
+			foreach($settings['twig']['extension']as $e){
+				$twig->addExtension($e);
+			}
 		}else{
 			$twig->extension = array();
 		}
 
-		print_r($twig);
-		die();
 
 		return $twig;
 	}
