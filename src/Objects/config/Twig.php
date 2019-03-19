@@ -127,7 +127,7 @@ class Twig {
 				//$this->allowedExtensions()[$value];
                 break;
             case "cache":
-                $valid = $this->isCache($file);
+                $valid = $this->isCache($value);
 
 				if($value==""){$value=false;}
 
