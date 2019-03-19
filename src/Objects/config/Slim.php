@@ -17,7 +17,7 @@ class Slim {
 
 
 	private function Exception( $type,$value ) {
-		throw new \Exception("FAIL: ".ucfirst($type)." wanted " . gettype($value) ." (".$value.") received");
+		throw new \Exception("FAIL: ".$type." wanted '', " . gettype($value) ." (".$value.") received");
 	}
 
 	private function file_exists($file){
@@ -29,7 +29,10 @@ class Slim {
 	}
 
 	private function isRouterCacheFile($file){
+
+		//var_dump($file);
 		if(is_bool($file) && $file==false ){
+			//var_dump($file);
 			return true;
 		}else{
 			return $this->file_exists($file);
@@ -64,7 +67,9 @@ class Slim {
 
 
 	function __set($name, $value) {
-        switch ($name) {
+
+		switch ($name) {
+
             case "debug":
                 $valid = is_bool($value) ;
 				$error = array( 'Boolean',$value );
@@ -74,8 +79,9 @@ class Slim {
 				$error = array( 'String',$value );
                 break;
             case "routercachefile":
-                $valid = $this->isRouterCacheFile($file);
-								$error = array( 'Bool',$value );
+
+                $valid = $this->isRouterCacheFile($value);
+				$error = array( 'Bool',$value );
                 break;
 
 			default:
@@ -83,7 +89,7 @@ class Slim {
 				$error = array( 'Unknown variable!' );
         }
 
-        if ($valid) {
+        if ($valid==true) {
             $this->{strtolower($name)} = $value;
 
             // just for demonstration
@@ -91,10 +97,11 @@ class Slim {
             //var_dump($value);
         } else {
             // throw an error, raise an exception, or otherwise respond
-			if( count($error)==1 ){
+			if( count($error)>0 ){
 				new \Exception("FAIL: "."FAIL: Cannot set \$this->$name = ");
 			}else{
-				$this->Exception( $type,$value );
+				echo "name:".$name;
+				$this->Exception( $error[0],$error[1] );
 			}
 
             // just for demonstration

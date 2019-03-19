@@ -14,27 +14,13 @@ use \Twig\Extension;
 
 
 class Twig {
-	
+
 
 	private function Exception( $type,$value ) {
-		throw new \Exception("FAIL: ".ucfirst($type)." wanted " . gettype($value) . " received");
+		throw new \Exception("FAIL:: ".ucfirst($type)." wanted " . gettype($value) . " received");
 	}
 
-	private function file_exists($file){
-		if(file_exists($file)){
-			throw new \Exception("FAIL: file doesnt exist (".$file.")");
-		}else{
-			return true;
-		}
-	}
 
-	private function isCache($file){
-		if(is_bool($file) && $file==false ){
-			return true;
-		}else{
-			return $this->file_exists($file);
-		}
-	}
 
 	private function logLevel($loglevel){
 
@@ -61,6 +47,19 @@ class Twig {
 		}
 	}
 
+
+	private function allowedExtensions($value){
+		$allowedExtensions=array(
+			"TEXT"=>new \Twig\Extension\Twig_Extensions_Extension_Text(),
+			"I18N"=>new \Twig\Extension\Twig_Extensions_Extension_I18n(),
+			"INTL"=>new \Twig\Extension\Twig_Extensions_Extension_Intl(),
+			"ARRAY"=>new \Twig\Extension\Twig_Extensions_Extension_Array(),
+			"DATE"=>new \Twig\Extension\Twig_Extensions_Extension_Date(),
+			"DEBUG"=>new \Twig\Extension\DebugExtension()
+		);
+		return $allowedExtensions;
+	}
+
 	private function isExtension($value){
 		/*
 			Text: Provides useful filters for text manipulation;
@@ -69,36 +68,72 @@ class Twig {
 			Array: Provides useful filters for array manipulation;
 			Date: Adds a filter for rendering the difference between dates.
 		*/
-		$allowedExtensions=array(
-			"TEXT"=>new Twig_Extensions_Extension_Text(),
-			"I18N"=>new Twig_Extensions_Extension_I18n(),
-			"INTL"=>new Twig_Extensions_Extension_Intl(),
-			"ARRAY"=>new Twig_Extensions_Extension_Array(),
-			"DATE"=>new Twig_Extensions_Extension_Date(),
-			"DEBUG"=>new DebugExtension()
-		);
+
 		$currentExtensions = $this->extensions;
+
 		if(!array_key_exists(strtoupper($value),$allowedExtensions)){
 			throw new \Exception("Unknown twig extension (".$value.")");
 		}
-		$currentExtensions[]=$allowedExtensions[strtoupper($value)];
+
+		$currentExtensions[]=$this->allowedExtensions()[strtoupper($value)];
+
 		$this->extensions=$currentExtensions;
+
 		return true;
 	}
 
+	private function isDebug($value){
+		if( $value=="1" ){
+			return true;
+		}elseif( $value=="" ){
+			return true;
+		}
+		return false;
+	}
+	private function debugValue($value){
+		if( $value=="1" ){
+			return true;
+		}
+		return false;
+	}
+
+	private function file_exists($file){
+		if(file_exists($file)){
+			throw new \Exception("FAIL: file doesnt exist (".$file.")");
+		}else{
+			return true;
+		}
+	}
+
+	private function isCache($file){
+		if(is_bool($file) && $file==false ){
+			return true;
+		}else{
+			return $this->file_exists($file);
+		}
+	}
+
 	function __set($name, $value) {
+
         switch ($name) {
             case "debug":
-                $valid = is_bool($value) ;
-				$error = array( 'Boolean',$value );
+				$valid = $this->isDebug($value);
+
+				$value = $this->debugValue($value);
+				$error = array(  );
                 break;
             case "extension":
+				//var_dump($value);
                 $valid = $this->isExtension($value);
 				$error = array( 'String',$value );
+				//$this->allowedExtensions()[$value];
                 break;
             case "cache":
                 $valid = $this->isCache($file);
-				$error = array( 'Bool',$value );
+
+				if($value==""){$value=false;}
+
+				$error = array(  );
                 break;
 
 			default:
@@ -112,12 +147,13 @@ class Twig {
             // just for demonstration
             //echo "pass: Set \$this->$name = ";
             //var_dump($value);
+			//echo "<br>";
         } else {
             // throw an error, raise an exception, or otherwise respond
 			if( count($error)==1 ){
 				new \Exception("FAIL: "."FAIL: Cannot set \$this->$name = ");
 			}else{
-				$this->Exception( $type,$value );
+				$this->Exception( $error[0],$error[1] );
 			}
 
             // just for demonstration
@@ -125,6 +161,7 @@ class Twig {
             //var_dump($value);
 
         }
+		//die();
     }
 
 
