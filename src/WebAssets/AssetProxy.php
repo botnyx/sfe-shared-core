@@ -33,6 +33,9 @@ class AssetProxy{
 	
 	function __construct(ContainerInterface $container){
 		
+		$this->settings=$container->get('settings')['sfe'];
+		$this->paths=$container->get('settings')['paths'];
+		
 		
 		//$this->frontEndConfig =  $container->get('frontEndConfig');
 
@@ -114,7 +117,7 @@ class AssetProxy{
 	}
 	
 	function e500($response){
-		$view = new \Slim\Views\Twig(_SETTINGS['paths']['root'].'/vendor/botnyx/sfe-shared-core/templates/errorPages', [
+		$view = new \Slim\Views\Twig($this->paths->root.'/vendor/botnyx/sfe-shared-core/templates/errorPages', [
 			'cache' => false
 		]);
 		return $view->render($response, 'HTTP500.html', [
@@ -126,7 +129,7 @@ class AssetProxy{
 	
 	
 	function e404($response){
-		$view = new \Slim\Views\Twig(_SETTINGS['paths']['root'].'/vendor/botnyx/sfe-shared-core/templates/errorPages', [
+		$view = new \Slim\Views\Twig($this->paths->root.'/vendor/botnyx/sfe-shared-core/templates/errorPages', [
 			'cache' => false
 		]);
 		return $view->render($response, 'HTTP404.html', [
