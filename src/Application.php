@@ -35,6 +35,14 @@ class Application {
 		
 		if($name=='configuration'){
 			return $this->configuration;
+		}elseif($name=='role'){
+			return $this->configuration->type;
+		}elseif($name=='paths'){
+			return $this->configuration->paths;
+		}elseif($name=='clientid'){
+			return $this->configuration->role->clientid;
+		}elseif($name=='clientsecret'){
+			return $this->configuration->role->clientsecret;
 		}else{
 			throw new \Exception("Cant access '".$name."' in Application.");
 		}
