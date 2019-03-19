@@ -63,7 +63,7 @@ class SfeHosts {
 			if( count($error)==1 ){
 				new \Exception("FAIL: Cannot set \$this->$name = ".gettype($value));
 			}else{
-				$this->Exception( $type,$value );
+				$this->Exception( $name,$value );
 			}
 
             // just for demonstration
@@ -73,6 +73,13 @@ class SfeHosts {
         }
     }
 
+	private function Exception( $type,$value ){
+		#var_dump( $type );
+		#var_dump( $value );
+		throw new \Exception("sfehosts, set $type=> $value");
+		#die();
+		
+	}
 	public function getUri($what=false){
 		if($what==false){
 			return array(
