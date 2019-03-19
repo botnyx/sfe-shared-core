@@ -19,7 +19,7 @@ class Application {
 			die(" - ");
 		}
 		echo "<pre>";
-		print_r($this->configuration);
+		var_dump($this->configuration);
 		die("xx");
 	}
 

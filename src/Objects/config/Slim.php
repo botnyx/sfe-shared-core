@@ -2,19 +2,12 @@
 
 namespace Botnyx\Sfe\Shared\Objects\config;
 
-
-
 use Monolog;
 /*
 
 */
 
-
-
-
 class Slim {
-
-
 
 	private function Exception( $type,$value ) {
 		throw new \Exception("FAIL: ".$type." wanted '', " . gettype($value) ." (".$value.") received");
@@ -71,11 +64,13 @@ class Slim {
 		switch ($name) {
 
             case "debug":
+
                 $valid = is_bool($value) ;
 				$error = array( 'Boolean',$value );
                 break;
             case "loglevel":
-                $valid = $this->logLevel($value);
+				$valid = $this->logLevel($value);
+				$value = $this->logLevel($value);
 				$error = array( 'String',$value );
                 break;
             case "routercachefile":

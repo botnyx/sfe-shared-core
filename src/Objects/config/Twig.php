@@ -5,7 +5,7 @@ namespace Botnyx\Sfe\Shared\Objects\config;
 
 
 use Monolog;
-use \Twig\Extension;
+use Twig\Extension;
 /*
 
 */
@@ -15,6 +15,7 @@ use \Twig\Extension;
 
 class Twig {
 
+	#use \Twig\Extension;
 
 	private function Exception( $type,$value ) {
 		throw new \Exception("FAIL:: ".ucfirst($type)." wanted " . gettype($value) . " received");
@@ -48,7 +49,7 @@ class Twig {
 	}
 
 
-	private function allowedExtensions($value){
+	private function allowedExtensions(){
 		$allowedExtensions=array(
 			"TEXT"=>new \Twig\Extension\Twig_Extensions_Extension_Text(),
 			"I18N"=>new \Twig\Extension\Twig_Extensions_Extension_I18n(),
@@ -68,14 +69,33 @@ class Twig {
 			Array: Provides useful filters for array manipulation;
 			Date: Adds a filter for rendering the difference between dates.
 		*/
+		//$allowed = $this->allowedExtensions();
 
+
+		#print_r(new \Twig\Extension\Twig_Extensions_Extension_Text());
+		print_r(new Twig_Extensions_Extension_I18n());
+		#print_r(new \Twig\Extension\DebugExtension());
+
+		die();
 		$currentExtensions = $this->extensions;
+		foreach($value as $v){
 
-		if(!array_key_exists(strtoupper($value),$allowedExtensions)){
-			throw new \Exception("Unknown twig extension (".$value.")");
+			if(!array_key_exists( strtoupper($v),$allowed )){
+				//throw new \Exception("Unknown twig extension (".strtoupper($v).")");
+			}else{
+				//var_dump($v);
+				//$currentExtensions[]=$this->allowedExtensions()[strtoupper($v)];
+			}
 		}
+		die();
 
-		$currentExtensions[]=$this->allowedExtensions()[strtoupper($value)];
+		//echo "val:".$value;
+
+
+
+
+
+
 
 		$this->extensions=$currentExtensions;
 
@@ -114,7 +134,7 @@ class Twig {
 	}
 
 	function __set($name, $value) {
-
+		//echo "SET `".$name."`=>`".$value."`<br>";
         switch ($name) {
             case "debug":
 				$valid = $this->isDebug($value);
@@ -124,8 +144,10 @@ class Twig {
                 break;
             case "extension":
 				//var_dump($value);
-                $valid = $this->isExtension($value);
-				$error = array( 'String',$value );
+				$valid = $this->isExtension($value);
+				$value = $this->extensions;
+
+				//$error = array( 'String',$value );
 				//$this->allowedExtensions()[$value];
                 break;
             case "cache":
