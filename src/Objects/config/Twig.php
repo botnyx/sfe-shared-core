@@ -16,6 +16,8 @@ use Twig\Extension;
 class Twig {
 
 	#use \Twig\Extension;
+	var $extensions;
+
 
 	private function Exception( $type,$value ) {
 		throw new \Exception("FAIL:: ".ucfirst($type)." wanted " . gettype($value) . " received");
@@ -51,56 +53,30 @@ class Twig {
 
 	private function allowedExtensions(){
 		$allowedExtensions=array(
-			"TEXT"=>new \Twig\Extension\Twig_Extensions_Extension_Text(),
-			"I18N"=>new \Twig\Extension\Twig_Extensions_Extension_I18n(),
-			"INTL"=>new \Twig\Extension\Twig_Extensions_Extension_Intl(),
-			"ARRAY"=>new \Twig\Extension\Twig_Extensions_Extension_Array(),
-			"DATE"=>new \Twig\Extension\Twig_Extensions_Extension_Date(),
+			"TEXT"=>new \Twig_Extensions_Extension_Text(),
+			"I18N"=>new \Twig_Extensions_Extension_I18n(),
+			"INTL"=>new \Twig_Extensions_Extension_Intl(),
+			"ARRAY"=>new \Twig_Extensions_Extension_Array(),
+			"DATE"=>new \Twig_Extensions_Extension_Date(),
 			"DEBUG"=>new \Twig\Extension\DebugExtension()
 		);
 		return $allowedExtensions;
 	}
 
-	private function isExtension($value){
-		/*
-			Text: Provides useful filters for text manipulation;
-			I18n: Adds internationalization support via the gettext library;
-			Intl: Adds a filter for localization of DateTime objects, numbers and currency;
-			Array: Provides useful filters for array manipulation;
-			Date: Adds a filter for rendering the difference between dates.
-		*/
-		//$allowed = $this->allowedExtensions();
-
-
-		#print_r(new \Twig\Extension\Twig_Extensions_Extension_Text());
-		print_r(new Twig_Extensions_Extension_I18n());
-		#print_r(new \Twig\Extension\DebugExtension());
-
-		die();
+	public function addExtension($value){
+		//die();
 		$currentExtensions = $this->extensions;
-		foreach($value as $v){
 
-			if(!array_key_exists( strtoupper($v),$allowed )){
-				//throw new \Exception("Unknown twig extension (".strtoupper($v).")");
-			}else{
-				//var_dump($v);
-				//$currentExtensions[]=$this->allowedExtensions()[strtoupper($v)];
-			}
+		if(!array_key_exists( strtoupper($value),$this->allowedExtensions() )){
+			throw new \Exception("Unknown twig extension (".strtoupper($value).")");
+		}else{
+			//var_dump($v);
+			$currentExtensions[]=$this->allowedExtensions()[strtoupper($value)];
 		}
-		die();
-
-		//echo "val:".$value;
-
-
-
-
-
-
 
 		$this->extensions=$currentExtensions;
-
-		return true;
 	}
+
 
 	private function isDebug($value){
 		if( $value=="1" ){
