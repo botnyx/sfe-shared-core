@@ -85,16 +85,23 @@ class Application {
 
 		/* get the container */
 		$container = $app->getContainer();
-
+		
+		
+		/* Add default error handlers. */
+		$container = $this->ErrorHandlers($container);
+		
+		/* Get the role-specific container runtime */
 		$container = $applicationCore->getContainer($container);
 
 
 
 		/* Middleware */
+		/* Get the role-specific Middleware runtime */
 		$app = $applicationCore->getMiddleware($app,$container);
 
 
 		/* Routes */
+		/* Get the role-specific Routes runtime */
 		$app = $applicationCore->getRoutes($app,$container);
 
 
@@ -302,25 +309,13 @@ class Application {
 		return $app;
 	}
 
-	private function logLevel($loglevel){
-		$levels= array(
-			"DEBUG"		=>\Monolog\Logger::DEBUG,
-			"INFO"		=>\Monolog\Logger::INFO,
-			"NOTICE"	=>\Monolog\Logger::NOTICE,
-			"WARNING"	=>\Monolog\Logger::WARNING,
-			"ERROR"		=>\Monolog\Logger::ERROR,
-			"CRITICAL"	=>\Monolog\Logger::CRITICAL,
-			"ALERT"		=>\Monolog\Logger::ALERT,
-			"EMERGENCY"	=>\Monolog\Logger::EMERGENCY
-		);
-		return $levels[strtoupper($loglevel)];
-	}
+	
 
 	private function slimLogger($logname,$loglevel='debug'){
 		$logger = array();
 		$logger['name'] = $logname;
 		$logger['path'] = isset($_ENV['docker']) ? 'php://stdout' : $this->configuration->paths->logs.'/app-'.$this->configuration->role->clientid.'.log';
-		$logger['level'] = $this->logLevel($loglevel);
+		$logger['level'] = $this->configuration->slim->loglevel; //$this->logLevel($loglevel);
 		return $logger;
 	}
 
@@ -342,6 +337,59 @@ class Application {
 		return $setting;
 	}
 
+	
+	
+	
+	
+	private function ErrorHandlers($c){
+		
+		$c['phpErrorHandler'] = function ($c) {
+			return function ($request, $response, $error) use ($c) {
+				return $response->withStatus(500)
+					->withHeader('Content-Type', 'text/html')
+					->write('phpErrorHandler');
+			};
+		};
+		
+		
+		$c['errorHandler'] = function ($c) {
+			return function ($request, $response, $error) use ($c) {
+				return $response->withStatus(500)
+					->withHeader('Content-Type', 'text/html')
+					->write('errorHandler');
+			};	
+		};
+		
+		$c['notFoundHandler'] = function ($c) {
+			return function ($request, $response, $error) use ($c) {
+				return $response->withStatus(500)
+					->withHeader('Content-Type', 'text/html')
+					->write('notFoundHandler');
+			};	
+		};
+		/*
+		$c['notAllowedHandler'] = function ($c) {
+			return function ($request, $response, $error) use ($c) {
+				return $response->withStatus(500)
+					->withHeader('Content-Type', 'text/html')
+					->write('notAllowedHandler');
+			};	
+		};*/
+		
+		
+		
+		return $c;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	/* dev helper to show errors. */
 	public function show_errors(){
