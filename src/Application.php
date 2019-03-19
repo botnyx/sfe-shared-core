@@ -18,17 +18,7 @@ class Application {
 			echo $e->getMessage();
 			die(" - ");
 		}
-
-		#echo "<pre>";
-
-		#var_dump(new \Twig_Extensions_Extension_I18n());
-
-		#print_r(new \Twig\Extension\DebugExtension());
-		#echo "<pre>";
-
-		#print_r($this->configuration);
-
-		#die("xx");
+		
 	}
 	
 	function __get($name) {
@@ -53,10 +43,7 @@ class Application {
 
 
 	public function init(){
-
-
-
-
+		
 		/* Dependencies */
 		switch ($this->configuration->type) {
 			case "frontend":
@@ -76,9 +63,7 @@ class Application {
 				break;
 		}
 
-		#print_r($this->configuration->type);
-		#die();
-
+		
 		/* Start the slim application */
 		$app = $this->startSlim();
 
@@ -94,20 +79,14 @@ class Application {
 		$container = $applicationCore->getContainer($container);
 
 
-
-		/* Middleware */
 		/* Get the role-specific Middleware runtime */
 		$app = $applicationCore->getMiddleware($app,$container);
 
 
-		/* Routes */
 		/* Get the role-specific Routes runtime */
 		$app = $applicationCore->getRoutes($app,$container);
 
-
-		#print_r($this);
-		#die("x");
-
+		
 		return $app;
 	}
 
@@ -341,9 +320,9 @@ class Application {
 	
 	
 	
-	private function ErrorHandlers($c){
+	private function ErrorHandlers($container){
 		
-		$c['phpErrorHandler'] = function ($c) {
+		$container['phpErrorHandler'] = function ($c) {
 			return function ($request, $response, $error) use ($c) {
 				return $response->withStatus(500)
 					->withHeader('Content-Type', 'text/html')
@@ -352,7 +331,7 @@ class Application {
 		};
 		
 		
-		$c['errorHandler'] = function ($c) {
+		$container['errorHandler'] = function ($c) {
 			return function ($request, $response, $error) use ($c) {
 				return $response->withStatus(500)
 					->withHeader('Content-Type', 'text/html')
@@ -360,8 +339,8 @@ class Application {
 			};	
 		};
 		
-		$c['notFoundHandler'] = function ($c) {
-			return function ($request, $response, $error) use ($c) {
+		$container['notFoundHandler'] = function ($c) {
+			return function ($request, $response) use ($c) {
 				return $response->withStatus(500)
 					->withHeader('Content-Type', 'text/html')
 					->write('notFoundHandler');
@@ -378,7 +357,7 @@ class Application {
 		
 		
 		
-		return $c;
+		return $container;
 	}
 	
 	
