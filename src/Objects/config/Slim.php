@@ -75,7 +75,7 @@ class Slim {
                 break;
             case "routercachefile":
                 $valid = $this->isRouterCacheFile($file);
-				$error = array( 'Bool',$value );
+								$error = array( 'Bool',$value );
                 break;
 
 			default:
