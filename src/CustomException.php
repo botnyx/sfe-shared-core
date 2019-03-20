@@ -2,6 +2,8 @@
 
 namespace Botnyx\Sfe\Shared;
 
+
+
 interface sfeExceptionInterface
 {
     /* Protected methods inherited from Exception class */
