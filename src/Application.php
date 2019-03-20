@@ -336,8 +336,8 @@ class Application {
 	
 	private function ErrorHandlers($container){
 		
-		/*
-		$container['xphpErrorHandler'] = function ($c) {
+		
+		$container['phpErrorHandler'] = function ($c) {
 			return function ($request, $response, $error) use ($c) {
 				return $response->withStatus(500)
 					->withHeader('Content-Type', 'text/html')
@@ -346,14 +346,24 @@ class Application {
 		};
 		
 		
-		$container['xerrorHandler'] = function ($c) {
-			return function ($request, $response, $error) use ($c) {
+		$container['errorHandler'] = function ($c) {
+			return function ($request, $response, $e) use ($c) {
+				$e->getMessage();
+				$e->getCode();
+				$e->getLine();
+				$e->getFile();
+				$e->getType();
+				//$e->toString();
+				
+				
+				print_r((string)$e );
+				die();
 				return $response->withStatus(500)
 					->withHeader('Content-Type', 'text/html')
 					->write('errorHandler');
 			};	
 		};
-		
+		/*
 		$container['xnotFoundHandler'] = function ($c) {
 			return function ($request, $response) use ($c) {
 				return $response->withStatus(500)
