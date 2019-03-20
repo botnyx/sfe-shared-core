@@ -33,8 +33,7 @@ class AssetProxy{
 	
 	function __construct(ContainerInterface $container){
 		
-		$this->settings=$container->get('settings')['sfe'];
-		$this->paths=$container->get('settings')['paths'];
+		$this->paths=$container->get('sfe')->paths;
 		
 		
 		//$this->frontEndConfig =  $container->get('frontEndConfig');
