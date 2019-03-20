@@ -38,7 +38,7 @@ class AssetProxy{
 		
 		//$this->frontEndConfig =  $container->get('frontEndConfig');
 
-		$cacheDirectory = sys_get_temp_dir();
+		$cacheDirectory = $this->paths->temp;
 		$this->debug = true;
 		
 		$this->cacher = $container->get('cache');
