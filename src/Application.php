@@ -17,13 +17,7 @@ class Application {
 			//fatal!
 			echo "<h1>ConfigurationException</h1>";
 			die($e->getMessage());
-		}catch(\Exception $e){
-			//fatal!
-			die($e->getMessage());
-		}
-		
-		
-		catch( \Exception $e){
+		}catch( \Exception $e){
 			echo "<h1>Main application error!</h1>";
 			echo $e->getMessage();
 			die(" - ");
