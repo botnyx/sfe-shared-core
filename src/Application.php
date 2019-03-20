@@ -352,7 +352,7 @@ class Application {
 				$e->getCode();
 				$e->getLine();
 				$e->getFile();
-				$e->getType();
+				//$e->getType();
 				//$e->toString();
 				
 				
