@@ -283,9 +283,9 @@ class Application {
 			'sfe'=>$this->_configuration,
 			'settings' => [
 				'debug'=> $this->_configuration->debug,
-				'paths'=> $this->_configuration->paths,
+				/*'paths'=> $this->_configuration->paths,
 				'hosts'=> $this->_configuration->hosts,
-				'clientid'=> $this->_configuration->clientid,
+				'clientid'=> $this->_configuration->clientid,*/
 				'displayErrorDetails' => $this->_configuration->slim('debug'), // set to false in production
 				'routerCacheFile' => $this->_configuration->slim('routercachefile'),
 				// Monolog settings
