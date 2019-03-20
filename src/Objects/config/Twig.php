@@ -116,8 +116,11 @@ class Twig {
         switch ($name) {
             case "debug":
 				$valid = $this->isDebug($value);
-
+				
 				$value = $this->debugValue($value);
+				if($value==true){
+					$this->addExtension('DEBUG');
+				}
 				$error = array(  );
                 break;
             case "extensionx":
