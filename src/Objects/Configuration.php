@@ -4,7 +4,7 @@ namespace Botnyx\Sfe\Shared\Objects;
 
 
 /*
-
+	new Botnyx\Sfe\Shared\Objects\ConfigurationException();
 */
 
 
@@ -23,13 +23,17 @@ class Configuration {
 
 		/* check if var is array */
 		if( !is_array($settingsArray) ){
-			throw new \Exception("Invalid configuration format.");
+			throw new ConfigurationException("Invalid configuration format.");
 		}
 
 
 		/* parse the settings array */
 		try{
 			$this->parse($settingsArray);
+		}catch(ConfigurationException $e){
+			//fatal!
+			echo "<h1>ConfigurationException</h1>";
+			die($e->getMessage());
 		}catch(\Exception $e){
 			//fatal!
 			die($e->getMessage());
@@ -56,13 +60,13 @@ class Configuration {
 
 	private function authSettings($settings){
 		if(!array_key_exists('clientId',$settings['sfeAuth'])){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing `clientId` in the `sfeAuth` section.");
+			throw new ConfigurationException("Fatal Error in Configuration.ini : Missing `clientId` in the `sfeAuth` section.");
 		}
 		$this->clientId = $settings['sfeAuth']['clientId'];
 		$section_settings = $settings['sfeBackend'];
 
 		if(!array_key_exists('clientSecret',$settings['sfeAuth'])){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing `clientSecret` in the `sfeAuth` section.");
+			throw new ConfigurationException("Fatal Error in Configuration.ini : Missing `clientSecret` in the `sfeAuth` section.");
 		}
 	}
 
@@ -70,57 +74,57 @@ class Configuration {
 	private function pathSettings($settings){
 		/* Check if section exists */
 		if(!array_key_exists('paths',$settings)){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing paths.");
+			throw new ConfigurationException("Fatal Error in Configuration.ini : Missing paths.");
 		}
 
 		$paths = new config\Paths();
 
 		/* path.root */
 		if(!array_key_exists('root',$settings['paths'])){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing `root` path.");
+			throw new ConfigurationException("Fatal Error in Configuration.ini : Missing `root` path.");
 		}
 		if( !file_exists($settings['paths']['root']) ){
-			throw new \Exception("Fatal Error in Configuration.ini : Folder `root`  not found.");
+			throw new ConfigurationException("Fatal Error in Configuration.ini : Folder `root`  not found.");
 		}
 		$paths->root = $settings['paths']['root'];
 
 
 		/* path.templates */
 		if(!array_key_exists('templates',$settings['paths'])){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing `templates` path.");
+			throw new ConfigurationException("Fatal Error in Configuration.ini : Missing `templates` path.");
 
 		}elseif( !file_exists($settings['paths']['templates']) ){
-			throw new \Exception($settings['paths']['templates']." Fatal Error in Configuration.ini : Folder `templates`  not found.");
+			throw new ConfigurationException($settings['paths']['templates']." Fatal Error in Configuration.ini : Folder `templates`  not found.");
 		}
 		$paths->templates = $settings['paths']['templates'];
 
 
 		/* path.publichtml */
 		if(!array_key_exists('publichtml',$settings['paths'])){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing `publichtml` path.");
+			throw new ConfigurationException("Fatal Error in Configuration.ini : Missing `publichtml` path.");
 
 		}elseif( !file_exists($settings['paths']['publichtml']) ){
-			throw new \Exception("Fatal Error in Configuration.ini : Folder `publichtml`  not found.");
+			throw new ConfigurationException("Fatal Error in Configuration.ini : Folder `publichtml`  not found.");
 		}
 		$paths->publichtml = $settings['paths']['publichtml'];
 
 
 		/* path.logs */
 		if(!array_key_exists('logs',$settings['paths'])){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing `logs` path.");
+			throw new ConfigurationException("Fatal Error in Configuration.ini : Missing `logs` path.");
 
 		}elseif( !file_exists($settings['paths']['logs']) ){
-			throw new \Exception("Fatal Error in Configuration.ini : Folder `logs`  not found.");
+			throw new ConfigurationException("Fatal Error in Configuration.ini : Folder `logs`  not found.");
 		}
 		$paths->logs = $settings['paths']['logs'];
 
 
 		/* path.temp */
 		if(!array_key_exists('temp',$settings['paths'])){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing `temp` path.");
+			throw new ConfigurationException("Fatal Error in Configuration.ini : Missing `temp` path.");
 
 		}elseif( !file_exists($settings['paths']['temp']) ){
-			throw new \Exception("Fatal Error in Configuration.ini : Folder `temp`  not found.");
+			throw new ConfigurationException("Fatal Error in Configuration.ini : Folder `temp`  not found.");
 		}
 		$paths->temp = $settings['paths']['temp'];
 
@@ -131,26 +135,26 @@ class Configuration {
 	private function slimSettings($settings){
 		/* Slim Framework related section */
 		if(!array_key_exists('slim',$settings)){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing `slim` section.");
+			throw new ConfigurationException("Fatal Error in Configuration.ini : Missing `slim` section.");
 		}
 		$slim = new config\Slim();
 
 		/* slim.debug */
 		if( !array_key_exists('debug',$settings['slim']) ){
-				throw new \Exception("Fatal Error in Configuration.ini : Missing `debug` in `slim` section.");
+				throw new ConfigurationException("Fatal Error in Configuration.ini : Missing `debug` in `slim` section.");
 		}
 		$slim->debug=$settings['slim']['debug'];
 
 		/* slim.loglevel */
 		if( !array_key_exists('loglevel',$settings['slim']) ){
-				throw new \Exception("Fatal Error in Configuration.ini : Missing `loglevel` in `slim` section.");
+				throw new ConfigurationException("Fatal Error in Configuration.ini : Missing `loglevel` in `slim` section.");
 		}
 		$slim->loglevel=$settings['slim']['loglevel'];
 
 
 		/* slim.routercachefile */
 		if( !array_key_exists('routercachefile',$settings['slim']) ){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing `routercachefile` in `slim` section.");
+			throw new ConfigurationException("Fatal Error in Configuration.ini : Missing `routercachefile` in `slim` section.");
 		}
 		if($settings['slim']['routercachefile']==""){
 			$slim->routercachefile=false;
@@ -165,19 +169,19 @@ class Configuration {
 
 		/* Twig template related section */
 		if(!array_key_exists('twig',$settings)){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing `twig` section.");
+			throw new ConfigurationException("Fatal Error in Configuration.ini : Missing `twig` section.");
 		}
 		$twig = new config\Twig();
 
 		/* twig.cache */
 		if( !array_key_exists('cache',$settings['twig']) ){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing `cache` in `twig` section.");
+			throw new ConfigurationException("Fatal Error in Configuration.ini : Missing `cache` in `twig` section.");
 		}
 		$twig->cache = $settings['twig']['cache'];
 
 		/* twig.debug */
 		if( !array_key_exists('debug',$settings['twig']) ){
-			throw new \Exception("Fatal Error in Configuration.ini : Missing `debug` in `twig` section.");
+			throw new ConfigurationException("Fatal Error in Configuration.ini : Missing `debug` in `twig` section.");
 		}
 		$twig->debug = $settings['twig']['debug'];
 
@@ -224,7 +228,7 @@ class Configuration {
 				$this->type='backend';
 				$this->role = $this->backendSettings($settings);
 			}else{
-				throw new \Exception("FAIL: Server-configuration cant have more than 1 role.");
+				throw new ConfigurationException("FAIL: Server-configuration cant have more than 1 role.");
 			}
 		}
 
@@ -235,7 +239,7 @@ class Configuration {
 				$this->type='auth';
 				$this->role =$this->authSettings($settings);
 			}else{
-				throw new \Exception("FAIL: Server-configuration cant have more than 1.. role.");
+				throw new ConfigurationException("FAIL: Server-configuration cant have more than 1.. role.");
 			}
 		}
 
@@ -244,13 +248,13 @@ class Configuration {
 				$this->type='cdn';
 				$this->role =$this->cdnSettings($settings);
 			}else{
-				throw new \Exception("FAIL: Server-configuration cant have more than 1.. role.");
+				throw new ConfigurationException("FAIL: Server-configuration cant have more than 1.. role.");
 			}
 		}
 
 
 		if($this->type==false){
-			throw new \Exception("FAIL: Server has no role defined.");
+			throw new ConfigurationException("FAIL: Server has no role defined.");
 		}
 
 
