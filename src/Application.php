@@ -275,10 +275,6 @@ class Application {
 	/* Create the Slim application */
 	public function startSlim(){
 		
-		
-		#print_r($this->_configuration);
-		#die();
-		
 		$app = new \Slim\App([
 			'sfe'=>$this->_configuration,
 			'settings' => [
