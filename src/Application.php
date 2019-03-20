@@ -4,20 +4,23 @@ namespace Botnyx\Sfe\Shared;
 
 class Application {
 
-	private $configuration;
-
+	protected $_configuration;
 
 	function __construct($_settings){
 
 
 		try{
-			$this->configuration = new \Botnyx\Sfe\Shared\Objects\Configuration($_settings);
+			$configuration = new \Botnyx\Sfe\Shared\Objects\Configuration($_settings);
 			//$this->parseSettings($_settings);
 		}catch( \Exception $e){
 			echo "<h1>Main application error!</h1>";
 			echo $e->getMessage();
 			die(" - ");
 		}
+		
+		$this->_configuration = new \Botnyx\Sfe\Shared\AppSettings($configuration);
+		
+		
 		
 	}
 	
@@ -45,7 +48,9 @@ class Application {
 	public function init(){
 		
 		/* Dependencies */
-		switch ($this->configuration->type) {
+		
+		
+		switch ($this->_configuration->type) {
 			case "frontend":
 				$applicationCore = new \Botnyx\Sfe\Frontend\Core\SlimLogic();
 				break;
@@ -269,14 +274,22 @@ class Application {
 
 	/* Create the Slim application */
 	public function startSlim(){
+		
+		
+		#print_r($this->_configuration);
+		#die();
+		
 		$app = new \Slim\App([
+			'sfe'=>$this->_configuration,
 			'settings' => [
-				'paths'=> (array) $this->configuration->paths,
-				'sfe'=> $this->configuration->role,
-				'displayErrorDetails' => $this->configuration->slim->debug, // set to false in production
-				'routerCacheFile' => $this->configuration->slim->routercachefile,
+				'debug'=> $this->_configuration->debug,
+				'paths'=> $this->_configuration->paths,
+				'hosts'=> $this->_configuration->hosts,
+				'clientid'=> $this->_configuration->clientid,
+				'displayErrorDetails' => $this->_configuration->slim('debug'), // set to false in production
+				'routerCacheFile' => $this->_configuration->slim('routercachefile'),
 				// Monolog settings
-				'logger' => $this->slimLogger($this->configuration->role->clientid, $this->configuration->slim->loglevel ),
+				'logger' => $this->slimLogger($this->_configuration->clientid, $this->_configuration->slim('loglevel') ),
 				'addContentLengthHeader'=>false,
 		/*		'addContentLengthHeader'=>false
 					ALWAYS disable this, else  the error
@@ -285,6 +298,7 @@ class Application {
 				*/
 			],
 		]);
+		
 		return $app;
 	}
 
@@ -293,8 +307,8 @@ class Application {
 	private function slimLogger($logname,$loglevel='debug'){
 		$logger = array();
 		$logger['name'] = $logname;
-		$logger['path'] = isset($_ENV['docker']) ? 'php://stdout' : $this->configuration->paths->logs.'/app-'.$this->configuration->role->clientid.'.log';
-		$logger['level'] = $this->configuration->slim->loglevel; //$this->logLevel($loglevel);
+		$logger['path'] = isset($_ENV['docker']) ? 'php://stdout' : $this->_configuration->paths->logs.'/app-'.$this->_configuration->clientid.'.log';
+		$logger['level'] = $this->_configuration->slim('loglevel'); //$this->logLevel($loglevel);
 		return $logger;
 	}
 

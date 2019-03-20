@@ -67,6 +67,7 @@ class Slim {
 
                 $valid = is_bool($value) ;
 				$error = array( 'Boolean',$value );
+				$valid = $this->debug = (bool)$value;
                 break;
             case "loglevel":
 				$valid = $this->logLevel($value);
