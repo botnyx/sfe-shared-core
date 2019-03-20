@@ -115,13 +115,13 @@ class AssetProxy{
 		return $response;
 	}
 	
-	function e500($response){
+	function e500($response,$msg=""){
 		$view = new \Slim\Views\Twig($this->paths->root.'/vendor/botnyx/sfe-shared-core/templates/errorPages', [
 			'cache' => false
 		]);
 		return $view->render($response, 'HTTP500.html', [
 			'debug'=>$this->debug,
-			'error' => array("code"=>500,"message"=>"Backend AssetsProxy reports unknown error.")
+			'error' => array("code"=>500,"message"=>$msg)
 		])->withStatus(404);
 		//return $response->withStatus(404)->withHeader('Content-Type', 'text/html')->write('CUSTOM Page not found');
 	}
