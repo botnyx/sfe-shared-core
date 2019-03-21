@@ -5,27 +5,40 @@ namespace Botnyx\Sfe\Shared;
 class Application {
 
 	protected $_configuration;
-
+	protected $_exception;
+	
+	
+	private function kill($html){
+		header('HTTP/1.0 500 Internal Server Error',true,500);
+		die($html);
+	}
+	
 	function __construct($_settings){
-
 
 		try{
 			$configuration = new \Botnyx\Sfe\Shared\Objects\Configuration($_settings);
+			//throw new Objects\ConfigurationException("test");
 			//$this->parseSettings($_settings);
 		}catch(Objects\ConfigurationException $e){
-			// Botnyx\Sfe\Shared\Objects
-			//fatal!
-			echo "<h1>ConfigurationException</h1>";
-			die($e->getMessage());
+			/* serve a static config errorpage */
+			$this->kill( \Botnyx\Sfe\Shared\Exception::configurationException($e) );
+			
 		}catch( \Exception $e){
-			echo "<h1>Main application error!</h1>";
-			echo $e->getMessage();
-			die(" - ");
+			/* serve a static errorpage */
+			$this->kill( \Botnyx\Sfe\Shared\Exception::unknownException($e) );
+			
 		}
 		
+		/* 
+			we have a valid configuration.
+			setup the exception handler for the rest of the app.
+		*/
+		$this->_exception = new \Botnyx\Sfe\Shared\Exception($configuration);
+		
+		/*
+			store the configuration		
+		*/
 		$this->_configuration = new \Botnyx\Sfe\Shared\AppSettings($configuration);
-		
-		
 		
 	}
 	
@@ -52,6 +65,17 @@ class Application {
 
 	public function init(){
 		
+		try{
+			return $this->_init();
+		}catch( \Exception $e){
+			$this->kill( \Botnyx\Sfe\Shared\Exception::unknownException($e) );
+			echo "<h1>Unknown application error!</h1>";
+			echo $e->getMessage();
+			die(" - ");
+		}
+		
+	}
+	private function _init(){
 		/* Dependencies */
 		
 		
@@ -81,6 +105,12 @@ class Application {
 		/* get the container */
 		$container = $app->getContainer();
 		
+		//$_exceptions = $this->_exception;
+		
+		$container['exceptions'] = $this->_exception;
+
+		//
+		$this->_exception->setContainer($container);
 		
 		/* Add default error handlers. */
 		$container = $this->ErrorHandlers($container);
@@ -98,8 +128,8 @@ class Application {
 
 		
 		return $app;
+		
 	}
-
 
 
 	private function OBSOLETEparseSettings($settings){
@@ -339,7 +369,9 @@ class Application {
 		
 		
 		$container['phpErrorHandler'] = function ($c) {
+			
 			return function ($request, $response, $error) use ($c) {
+				return $c->get('exceptions')->phpErrorHandler($request, $response, $error);
 				return $response->withStatus(500)
 					->withHeader('Content-Type', 'text/html')
 					->write('phpErrorHandler');
@@ -348,7 +380,9 @@ class Application {
 		
 		
 		$container['errorHandler'] = function ($c) {
-			return function ($request, $response, $e) use ($c) {
+			return function ($request, $response, $error) use ($c) {
+				return $c->get('exceptions')->errorHandler($request, $response, $error);
+			
 				$e->getMessage();
 				$e->getCode();
 				$e->getLine();
@@ -364,17 +398,21 @@ class Application {
 					->write('errorHandler');
 			};	
 		};
-		/*
-		$container['xnotFoundHandler'] = function ($c) {
+		
+		$container['notFoundHandler'] = function ($c) {
 			return function ($request, $response) use ($c) {
+				return $c->get('exceptions')->notFoundHandler($request, $response, $error);
+			
 				return $response->withStatus(500)
 					->withHeader('Content-Type', 'text/html')
 					->write('notFoundHandler');
 			};	
 		};
-		
+		/*
 		$c['notAllowedHandler'] = function ($c) {
 			return function ($request, $response, $error) use ($c) {
+				return $c->get('_exceptions')->notAllowedHandler($request, $response, $error);
+			
 				return $response->withStatus(500)
 					->withHeader('Content-Type', 'text/html')
 					->write('notAllowedHandler');
