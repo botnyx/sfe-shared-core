@@ -32,11 +32,14 @@ class Configuration {
 			$this->parse($settingsArray);
 		}catch(ConfigurationException $e){
 			//fatal!
-			echo "<h1>ConfigurationException</h1>";
-			die($e->getMessage());
+			
+			$html = \Botnyx\Sfe\Shared\Exception::configurationException($e);
+			$end = \Botnyx\Sfe\Shared\Exception::kill($html);
+			die();
 		}catch(\Exception $e){
-			//fatal!
-			die($e->getMessage());
+			$html = \Botnyx\Sfe\Shared\Exception::unknownException($e);
+			$end = \Botnyx\Sfe\Shared\Exception::kill($html);
+			die();
 		}
 
 	}

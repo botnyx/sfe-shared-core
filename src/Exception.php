@@ -210,11 +210,16 @@ class Exception {
 	/*
 		
 		Static function for pre-app initialized errors.
-	
+	\Botnyx\Sfe\Shared\Exception::configurationException
 	*/
 	
+	static function kill($html){
+		header('HTTP/1.0 500 Internal Server Error',true,500);
+		die($html);
+	}
+	
 	static function configurationException ($e){
-		return \Botnyx\Sfe\Shared\Exception::fatalExceptionHtml('A unknown error occured.',$e->getMessage());
+		return \Botnyx\Sfe\Shared\Exception::fatalExceptionHtml('A configuration error occured.',$e->getMessage());
 	}
 	
 	static function unknownException ($e){
