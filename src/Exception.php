@@ -18,6 +18,7 @@ class Exception {
 		$this->paths = $configuration->paths;
 		$this->sfe = $configuration->role;
 		
+		$this->debug=true;
 			
 		/*
 			Create twig for the errors.
@@ -39,11 +40,19 @@ class Exception {
 	
 	
 	
-	
 	function Exception($e){
 		
 	}
-	
+	function ExceptionToArray($error){
+		return array( 
+			"code"=>$error->getCode(),
+			"message"=>$error->getMessage(),
+			"file"=>$error->getFile(),
+			"line"=>$error->getLine(),
+			"trace"=>$error->getTrace()
+		);
+		//error.code }} , {{ error.message }} {{ error.file }}:{{ error.line 
+	}
 	public function notAllowedHandler($request, $response, $methods){
 		return $response->withStatus(405)
             ->withHeader('Allow', implode(', ', $methods))
@@ -53,12 +62,105 @@ class Exception {
 	}
 	
 	public function notFoundHandler($request, $response){
-		return $this->view->render($response,'HTTP404.html',[]);
-		return $response->withStatus(500)->withHeader('Content-Type', 'text/html')->write('notFoundHandler');
+		/* 
+			Content negotiation.  
+		*/
+		
+		$responseType = 'json';
+		if ($request->hasHeader('accept')) {
+			if(strpos($request->getHeaderLine('accept'),'text/html')!==false ){
+				$responseType = 'html';
+				return $this->view->render($response,'HTTP404.html',[])->withStatus(404);
+			}
+		}
+		
+		
+		$res["code"]		= $e->getCode;
+		$res["status"]		= "Not found.";
+		$res["statusmsg"]	= $e->getMessage();
+		$res["data"] = false;
+		
+		return $response->withStatus(404)->withJson($res);
 	}
 	
+	
+	
+	
 	public function errorHandler($request, $response, $error){
-		return $response->withStatus(500)->withHeader('Content-Type', 'text/html')->write('errorHandler <pre>'.$error);
+		
+		/*
+			Get requested url info
+		*/
+		$uri = $request->getUri();
+		$reqinfo = array(
+			'host'=>$uri->getHost(),
+			'path'=>$uri->getPath(),
+			'query'=>$uri->getQuery(),
+			'fragment'=>$uri->getFragment()
+		);
+		
+		/*
+			Get Minimal headers.
+		*/
+		$_headers = array(
+			"referer"=>$request->getHeaderLine('referer'),
+			"uagent"=>$request->getHeaderLine('user-agent'),
+			"dnt"=>$request->hasHeader('dnt')
+		);
+		
+		
+		//$contentType = $request->getContentType();
+		
+		//$headers = $request->getHeaders();
+		
+		
+		
+		
+		
+		/* 
+			Content negotiation.  
+		*/
+		$responseType = 'json';
+		if ($request->hasHeader('accept')) {
+			if(strpos($request->getHeaderLine('accept'),'text/html')!==false ){
+				$responseType = 'html';
+			}
+		}
+		
+		
+		
+		$templateVars = array(
+			'error'=>$this->ExceptionToArray($error),
+			'debug'=>(int)$this->debug,
+			'clientid'=>$this->sfe->clientid
+		);
+		
+		
+		$jsonError["code"]		= $error->getCode;
+		$jsonError["status"]	= "Fatal Exception.";
+		$jsonError["statusmsg"]	= $error->getMessage();
+		$jsonError["data"] = $this->ExceptionToArray($error);
+		
+		
+		
+		
+		if($error->getCode()==404){
+			$jsonError["status"]	= "Not found.";
+			if($responseType=='html'){
+				return $this->view->render($response,'HTTP404.html',$templateVars)->withStatus(404);
+			}else{
+				return $response->withStatus(404)->withJson($jsonError);
+			}
+		}
+		
+		if($responseType=='html'){
+			return $this->view->render($response,'HTTP500.html',$templateVars)->withStatus(500);
+		}else{
+			return $response->withStatus(500)->withJson($jsonError);
+		}
+		
+		
+		//return $response->withStatus(500)->withHeader('Content-Type', 'text/html')->write('errorHandler <pre>'.$error);
 	}
 	
 	public function phpErrorHandler($request, $response, $error){
