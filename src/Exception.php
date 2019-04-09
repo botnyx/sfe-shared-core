@@ -75,9 +75,9 @@ class Exception {
 		}
 		
 		
-		$res["code"]		= $e->getCode;
+		$res["code"]		= 404;//$e->getCode;
 		$res["status"]		= "Not found.";
-		$res["statusmsg"]	= $e->getMessage();
+		$res["statusmsg"]	= "";//$e->getMessage();
 		$res["data"] = false;
 		
 		return $response->withStatus(404)->withJson($res);
