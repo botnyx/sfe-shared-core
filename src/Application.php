@@ -322,6 +322,8 @@ class Application {
 				// Monolog settings
 				'logger' => $this->slimLogger($this->_configuration->clientid, $this->_configuration->slim('loglevel') ),
 				'addContentLengthHeader'=>false,
+				'determineRouteBeforeAppMiddleware' => true,
+				
 		/*		'addContentLengthHeader'=>false
 					ALWAYS disable this, else  the error
 					PHP Fatal error:  Uncaught TypeError: fread() expects parameter 2 to be integer, string given
